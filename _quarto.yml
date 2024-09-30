@@ -5,8 +5,11 @@ website:
   title: "is415-g1t5-project"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
+      - href: 'proposal/proposal.qmd'
+        text: Proposal
+      - href: 'shinyapp/shinyapp.qmd'
+        text: Shiny App
+    right: 
       - about.qmd
 
 format:
