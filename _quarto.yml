@@ -7,7 +7,9 @@ website:
     left:
       - href: 'proposal/proposal.qmd'
         text: Proposal
-      - href: 'shinyapp/shinyapp.qmd'
+      - href: 'poster/poster.qmd'
+        text: Poster
+      - href: 'https://williamtjw.shinyapps.io/oooShiny/'
         text: Shiny App
     right: 
       - about.qmd
