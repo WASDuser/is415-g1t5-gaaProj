@@ -5,14 +5,14 @@ date: "October 1st, 2024"
 date-modified: "last-modified"
 ---
 
-the missile is very tired. he is eepy. hes had a long day of splashing bandits and wants to take js a smol eeb. he eeby and neeby to sleebies. mid size missile need eeb by bedtime.
-
 ::: {style="font-size:40px"}
-ShinyGeode
+**ShinyGeode**
 :::
 
+------------------------------------------------------------------------
+
 ::: {style="font-size:30px"}
-Theme: Flow and Movement Data Analytics/ Geographical Accessibility and Spatial Interaction Models
+**Theme: Flow and Movement Data Analytics/ Geographical Accessibility and Spatial Interaction Models**
 :::
 
 ------------------------------------------------------------------------
@@ -33,7 +33,22 @@ Flow and Movement Analytics of traffic congestion hotspots in the capital city o
 
 -   
 
-.....
+# Datasets 
+
+# Approach and Methodology
+
+-   **Data Preparation**
+
+    1.  Sourcing data and Importing data
+    2.  Data Wrangling
+        -   Processing imported data to keep only needed information
+
+        -   Restricting study area
+
+-   **Exploratory Data Analysis (EDA)**
+
+    1.  Handling missing/duplicated data
+    2.  Examine data to identify patterns
 
 # Bibliography
 
