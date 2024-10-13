@@ -27,21 +27,22 @@ More specifically, Flow and Movement Analytics of traffic congestion hotspots in
 
 Video Links (motivation):
 
--   [traffic congestion in cambodia](https://www.youtube.com/watch?v=4ac811quVhw)
+-   
 
 ------------------------------------------------------------------------
 
 # Project Objectives
 
--   Identify and detect the traffic hotspots, clusters, and outliers
+-   Identify and detect the crime rates hotspots, clusters, and outliers
 
--   Access global and local spatial autocorrelation in traffic congestions in Cambodia
+-   Access global and local spatial autocorrelation in Crime Rates in Malaysia
 
 ------------------------------------------------------------------------
 
 # Datasets
 
--   [Cambodia - Subnational Administrative Boundaries](https://data.humdata.org/dataset/7472f7e0-3deb-44d9-bd36-38237c666a2e/resource/0654e392-665b-47b4-8393-72d72dce9c72/download/khmadm_gov_20181004_ab_shp.zip)
+-   [Crime Rates working data](https://data.gov.my/data-catalogue/crime_district)
+-   [Shapefile (Administrative level 0-2)](https://data.humdata.org/dataset/cod-ab-mys?)
 
 ------------------------------------------------------------------------
 
@@ -53,7 +54,7 @@ Video Links (motivation):
     2.  Data Wrangling
         -   Processing imported data to keep only needed information
 
-        -   Restricting study area
+        -   Restricting study area by focusing on a particular type of crime
 
         -   Handling missing/duplicated data
 
@@ -67,7 +68,7 @@ Video Links (motivation):
 
 -   **Exploratory Data Analysis (EDA)**
 
-    1.  Visualising graphs/maps of traffic congestion in various categories
+    1.  Visualising graphs/maps of Crime Rates in various categories
     2.  Explore interactive or animative plots to showcase time-based flow of traffic activities
 
 -   **Global and Local Spatial Autocorrelation**
