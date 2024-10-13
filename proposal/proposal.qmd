@@ -17,9 +17,7 @@ Theme: Flow and Movement Data Analytics/ Geographical Accessibility and Spatial 
 
 ------------------------------------------------------------------------
 
-::: {style="font-size: 30px"}
-Problem and Motivation
-:::
+# Problem and Motivation 
 
 Traffic congestion in Cambodia has been a serious problem for years, and often has devastating effects such as fatal accidents. In 2021, a report by the National Road Safety Committee (NRSC) and the United Nations Development Programme (UNDP) found that road traffic congestion were one of the leading causes of death in Cambodia. Based on data collected in 2019, the report discovered that on average, there were 5 deaths due to traffic **daily**. *(Phim et al., 2019)*. It was further stated that traffic congestion in the nation has risen almost 25% in the years between 2009-2019, and most of these accidents fell within the capital city of Phnom Penh.
 
@@ -27,13 +25,11 @@ Flow and Movement Analytics of traffic congestion hotspots in the capital city o
 
 ------------------------------------------------------------------------
 
-::: {style="font-size:30px"}
-Project Objectives
-:::
+# Project Objectives
 
 -   Find out where the traffic hotpsots are
 
--   Look for presence of spatial autocorrelation in cases of traffic accidents/congestion
+-   Look for presence of spatial autocorrelation in cases of traffic accidents
 
 -   
 
