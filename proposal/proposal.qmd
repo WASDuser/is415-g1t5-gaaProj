@@ -51,10 +51,23 @@ Video Links (motivation):
 
         -   Restricting study area
 
+        -   Handling missing/duplicated data
+
+        -   Examine data to identify patterns
+
+        -   Joining boundary and working data
+
+        -   Perform a write and read to rds for easier access to variable
+
 -   **Exploratory Data Analysis (EDA)**
 
-    1.  Handling missing/duplicated data
-    2.  Examine data to identify patterns
+    1.  Visualising graphs/maps of traffic congestion in various categories
+
+-   **Global and Local Spatial Autocorrelation**
+
+-   **Plotting our results and Interpretation**
+
+-   **Conclusion**
 
 ------------------------------------------------------------------------
 
