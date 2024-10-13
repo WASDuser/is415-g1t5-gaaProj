@@ -6,39 +6,39 @@ date-modified: "last-modified"
 ---
 
 ::: {style="font-size:40px"}
-**ShinyGeode**
+**Crime Rojak**
 :::
 
 ------------------------------------------------------------------------
 
 ::: {style="font-size:30px"}
-**Theme: Flow and Movement Data Analytics/ Geographical Accessibility and Spatial Interaction Models**
+**Theme: Spatial Point Patterns Analysis/Exploratory Spatial Data Analysis**
 :::
 
 ------------------------------------------------------------------------
 
 # Project Motivation
 
-Singaporean's often take their home's relatively low crime rate for granted, often bringing that mindset along when they visit faraway countries. However, would that still be wise for Singapre's immediate neighbour, Malaysia?
+Singaporeans take their home's low crime rate for granted, often bringing that mindset along when they visit other countries. One of the most popular getaway destinations for us is our neighbour, Malaysia, given the multiple factors of convenience like proximity and the relatively lower cost. However, it will not be wise to assume the same level of safety as we have in Singapore.
 
-Our project aims to inform users (or tourists) about the patterns and trends of crime in Malaysia, also helping them manage travel risk for their destinations. More specifically, we will be incorporating Spatial-Temporal analysis of crime activity, Global and Local autocorrelation and an array of visualisation techniques.
-
--   
+Our project aims to raise awareness about the crimes and safety issues in Malaysia, so that tourists can manage travel risk for their destinations. Spatial Point Pattern Analysis can aid in providing useful insights on the distribution of crime in Malaysia. Exploratory Data Analysis can be utilised to identify hotspots or cold spot areas for crimes of different types, providing travellers with more concrete information when deciding which states to travel to.
 
 ------------------------------------------------------------------------
 
 # Project Objectives
 
--   Identify and detect the crime rates hotspots, clusters, and outliers
+-   Visualise the Crime events on a map of the study area
 
--   Access global and local spatial autocorrelation in Crime Rates in Malaysia
+-   Figure out if there are any patterns relating the crime type and the spatial units in the study area
+
+-   Identify the crime rates hotspots and clusters
 
 ------------------------------------------------------------------------
 
 # Datasets
 
--   [Crime Rates working data](https://data.gov.my/data-catalogue/crime_district)
--   [Shapefile (Administrative level 0-2)](https://data.humdata.org/dataset/cod-ab-mys?)
+-   [Crime Rates working data](https://data.gov.my/data-catalogue/crime_district): Aspatial Data that covers specifics of the crimes committed in the various states.
+-   [Shapefile (Administrative level 0-2)](https://data.humdata.org/dataset/cod-ab-mys?): Shapefile that contains the admin boundaries of Malaysia
 
 ------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ Our project aims to inform users (or tourists) about the patterns and trends of 
     2.  Data Wrangling
         -   Processing imported data to keep only needed information
 
-        -   Restricting study area by focusing on a particular type of crime
+        -   Restricting study area
 
         -   Handling missing/duplicated data
 
@@ -65,16 +65,25 @@ Our project aims to inform users (or tourists) about the patterns and trends of 
 -   **Exploratory Data Analysis (EDA)**
 
     1.  Visualising graphs/maps of Crime Rates in various categories
-    2.  Explore interactive or animative plots to showcase time-based flow of traffic activities
+    2.  Reveal the spatial distribution of crimes in the study area
 
 -   **Global and Local Spatial Autocorrelation**
 
--   **Plotting our results and Interpretation**
+    1.  Global: Make use of measures such as Moran I's, Geary C's to determine if the spatial patterns of the crime events are clustered or are randomly distributed
+    2.  Local: Make use of measures such as Local Moran I's and Getis-Ord Gi\* statistic to identify cold and/or hotspot areas for crime events in our study area.
+
+-   **Mapping our results and Interpretation**
 
 -   **Conclusion**
 
 ------------------------------------------------------------------------
 
-# Bibliography
+# Application System Architecture
 
-1.  Phim, R., Nick Beresford, Nimnuon Ivek, Lang Sok, Bora Phat, Richard Marshall, Iván Gonzalez de Alba, Chandarany Ouch, Sun Chanthol, Men Manvy, Prum Vantha, Boran Sattya, Tho Dalin, Uy Map, & Pich Chanbandith. (2019). Road Traffic Accidents In Cambodia. In *Road Traffic Accidents in Cambodia* \[Report\]. https://www.undp.org/sites/g/files/zskgke326/files/migration/kh/UNDP_KH_ROAD-TRAFFIC-ACCIDENT-REPORT.pdf
+![](images/Backend-01.gif)
+
+------------------------------------------------------------------------
+
+# Shiny Storyboard 
+
+![](images/clipboard-3317242451.png)
