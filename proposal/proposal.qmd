@@ -31,9 +31,9 @@ Video Links (motivation):
 
 # Project Objectives
 
--   Find out where the traffic hotpsots are
+-   Find out where the traffic hotspots are
 
--   Look for presence of spatial autocorrelation in cases of traffic accidents
+-   Access global and local spatial autocorrelation in traffic congestions in Cambodia
 
 ------------------------------------------------------------------------
 
