@@ -17,11 +17,15 @@ date-modified: "last-modified"
 
 ------------------------------------------------------------------------
 
-# Problem and Motivation 
+# Problem and Motivation
 
 Traffic congestion in Cambodia has been a serious problem for years, and often has devastating effects such as fatal accidents. In 2021, a report by the National Road Safety Committee (NRSC) and the United Nations Development Programme (UNDP) found that road traffic congestion were one of the leading causes of death in Cambodia. Based on data collected in 2019, the report discovered that on average, there were 5 deaths due to traffic **daily**. *(Phim et al., 2019)*. It was further stated that traffic congestion in the nation has risen almost 25% in the years between 2009-2019, and most of these accidents fell within the capital city of Phnom Penh.
 
 Flow and Movement Analytics of traffic congestion hotspots in the capital city of Phnom Penh could provide insights on likely causes of traffic accidents. Other geographical analysis methods such as Exploratory Spatial Data Analysis techniques can help us identify any correlated factors that result in these congestions.
+
+Video Links (motivation):
+
+-   [traffic congestion in cambodia](https://www.youtube.com/watch?v=4ac811quVhw)
 
 ------------------------------------------------------------------------
 
@@ -33,7 +37,7 @@ Flow and Movement Analytics of traffic congestion hotspots in the capital city o
 
 ------------------------------------------------------------------------
 
-# Datasets 
+# Datasets
 
 ------------------------------------------------------------------------
 
