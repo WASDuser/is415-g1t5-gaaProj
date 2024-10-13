@@ -8,10 +8,8 @@ date-modified: "last-modified"
 the missile is very tired. he is eepy. hes had a long day of splashing bandits and wants to take js a smol eeb. he eeby and neeby to sleebies. mid size missile need eeb by bedtime.
 
 ::: {style="font-size:40px"}
-\<\<insert fanshy smanshy proj name\>\>
+ShinyGeode
 :::
-
-------------------------------------------------------------------------
 
 ::: {style="font-size:30px"}
 Theme: Flow and Movement Data Analytics/ Geographical Accessibility and Spatial Interaction Models
@@ -27,7 +25,11 @@ Traffic congestion in Cambodia has been a serious problem for years, and often h
 
 Flow and Movement Analytics of traffic congestion hotspots in the capital city of Phnom Penh could provide insights on likely causes of traffic accidents. Other geographical analysis methods such as Exploratory Spatial Data Analysis techniques can help us identify any correlated factors that result in these congestions.
 
-.....
+------------------------------------------------------------------------
+
+::: {style="font-size:30px"}
+Project Objectives
+:::
 
 .....
 
