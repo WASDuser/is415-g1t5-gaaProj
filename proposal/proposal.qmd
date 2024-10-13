@@ -31,7 +31,7 @@ Video Links (motivation):
 
 # Project Objectives
 
--   Find out where the traffic hotspots are
+-   Identify and detect the traffic hotspots, clusters, and outliers
 
 -   Access global and local spatial autocorrelation in traffic congestions in Cambodia
 
@@ -53,15 +53,18 @@ Video Links (motivation):
 
         -   Handling missing/duplicated data
 
+        -   Cleaning up of data
+
         -   Examine data to identify patterns
 
-        -   Joining boundary and working data
+        -   Joining of boundary and working data
 
         -   Perform a write and read to rds for easier access to variable
 
 -   **Exploratory Data Analysis (EDA)**
 
     1.  Visualising graphs/maps of traffic congestion in various categories
+    2.  Explore interactive or animative plots to showcase time-based flow of traffic activities
 
 -   **Global and Local Spatial Autocorrelation**
 
