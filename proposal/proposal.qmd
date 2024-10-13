@@ -31,7 +31,11 @@ Flow and Movement Analytics of traffic congestion hotspots in the capital city o
 Project Objectives
 :::
 
-.....
+-   Find out where the traffic hotpsots are
+
+-   Look for presence of spatial autocorrelation in cases of traffic accidents/congestion
+
+-   
 
 .....
 
