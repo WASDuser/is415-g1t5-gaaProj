@@ -42,6 +42,38 @@ Our project aims to raise awareness about the crimes and safety issues in Malays
 
 ------------------------------------------------------------------------
 
+# Literature Review
+
+-   [Criminological Insights: A Comprehensive Spatial Analysis of Crime Hot Spots of Property Offenses in Malaysia's Urban Centers](https://journals2.ums.ac.id/fg/article/view/4306/1203)
+
+    -   **Objective:**
+
+        -   To examine patterns in property crimes in Selangor, Kuala Lumpur and Putrajaya from 2015-2020
+
+        -   To understand the evolution and dynamics of property crimes
+
+        -   To better understand the effects of the National Transformation Programme
+
+    -   **Geospatial and Aspatial Data:**
+
+        -   Study areas (Geospatial data) were methodically chosen for their wealth, geopolitical landscape and vibrant city life and attractions. More specifically, the study makes use of the Police Station boundaries in these states.
+
+        -   Property Crime incidents and their spatial characteristics served as the aspatial data for the study.
+
+    -   **Methods Deployed:**
+
+        -   Global Measure of Spatial Autocorrelation: Global Moran I's Statistic
+
+        -   Local Measure of Spatial Autocorrelation & Hot spot analysis: Getis-Ord Gi\* Statistic
+
+    -   **Learnings and Takeaways:**
+
+        -   Instead of deploying a wide range of different measures, the study deployed these two methods using different categories (By year, By Location) to gain a more comprehensive understanding of crimes of the this nature
+
+        -   Using Police/Jurisdical boundaries to examine crime events is very appropriate and will be useful when chaneling efforts to lower crime rates
+
+------------------------------------------------------------------------
+
 # Approach and Methodology
 
 -   **Data Preparation**
