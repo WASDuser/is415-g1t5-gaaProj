@@ -39,6 +39,8 @@ Video Links (motivation):
 
 # Datasets
 
+-   [Cambodia - Subnational Administrative Boundaries](https://data.humdata.org/dataset/7472f7e0-3deb-44d9-bd36-38237c666a2e/resource/0654e392-665b-47b4-8393-72d72dce9c72/download/khmadm_gov_20181004_ab_shp.zip)
+
 ------------------------------------------------------------------------
 
 # Approach and Methodology
