@@ -65,8 +65,23 @@ crime_sf[57:63,]
 crime_sf[64:98,]
 
 # when extracting rows, filter out the 'all' type and 'All' type, pattern seen above
+
+# potential 
 ```
 
 ```{r}
+msia_adm1 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm1_unhcr_20210211')
+msia_adm2 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm2_unhcr_20210211')
+```
 
+```{r}
+tmap_mode('plot')
+```
+
+```{r}
+tm_shape(msia_adm1) + tm_polygons()
+```
+
+```{r}
+tm_shape(msia_adm2) + tm_polygons()
 ```
