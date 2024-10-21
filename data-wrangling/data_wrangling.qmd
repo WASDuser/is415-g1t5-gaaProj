@@ -5,83 +5,83 @@ date: "October 1, 2024"
 date-modified: "last-modified"
 ---
 
-```{r}
-pacman::p_load(sf, tidyverse, tmap) # add as needed
-```
+<!-- ```{r} -->
+<!-- pacman::p_load(sf, tidyverse, tmap) # add as needed -->
+<!-- ``` -->
 
-```{r}
-crime_sf <- read_csv('data/aspatial/crime_district.csv')
-```
+<!-- ```{r} -->
+<!-- crime_sf <- read_csv('data/aspatial/crime_district.csv') -->
+<!-- ``` -->
 
-```{r}
-glimpse(crime_sf)
-```
+<!-- ```{r} -->
+<!-- glimpse(crime_sf) -->
+<!-- ``` -->
 
-```{r}
-unique(crime_sf$state)
-```
+<!-- ```{r} -->
+<!-- unique(crime_sf$state) -->
+<!-- ``` -->
 
-```{r}
-unique(crime_sf$district)
-```
+<!-- ```{r} -->
+<!-- unique(crime_sf$district) -->
+<!-- ``` -->
 
-```{r}
-unique(crime_sf$category)
-```
+<!-- ```{r} -->
+<!-- unique(crime_sf$category) -->
+<!-- ``` -->
 
-```{r}
-cat_crime <- ggplot(data=crime_sf, 
-             aes(x= `category`)) +
-  geom_bar(bins=20, 
-                 color="black", 
-                 fill="light blue")
-cat_crime
-```
+<!-- ```{r} -->
+<!-- cat_crime <- ggplot(data=crime_sf,  -->
+<!--              aes(x= `category`)) + -->
+<!--   geom_bar(bins=20,  -->
+<!--                  color="black",  -->
+<!--                  fill="light blue") -->
+<!-- cat_crime -->
+<!-- ``` -->
 
-```{r}
-unique(crime_sf$type)
-```
+<!-- ```{r} -->
+<!-- unique(crime_sf$type) -->
+<!-- ``` -->
 
-```{r}
-unique(crime_sf$crimes)
-```
+<!-- ```{r} -->
+<!-- unique(crime_sf$crimes) -->
+<!-- ``` -->
 
-```{r}
-# overall
-plot(crime_sf$crimes)
-```
+<!-- ```{r} -->
+<!-- # overall -->
+<!-- plot(crime_sf$crimes) -->
+<!-- ``` -->
 
-```{r}
-# Assault (entire M'sia, all types)
-crime_sf[1:7,]
+<!-- ```{r} -->
+<!-- # Assault (entire M'sia, all types) -->
+<!-- crime_sf[1:7,] -->
 
-# Assault by type (entire M'sia)
-crime_sf[8:56,]
+<!-- # Assault by type (entire M'sia) -->
+<!-- crime_sf[8:56,] -->
 
-# Property (entire M'sia, all types)
-crime_sf[57:63,]
+<!-- # Property (entire M'sia, all types) -->
+<!-- crime_sf[57:63,] -->
 
-# Property by type (entire M'sia)
-crime_sf[64:98,]
+<!-- # Property by type (entire M'sia) -->
+<!-- crime_sf[64:98,] -->
 
-# when extracting rows, filter out the 'all' type and 'All' type, pattern seen above
+<!-- # when extracting rows, filter out the 'all' type and 'All' type, pattern seen above -->
 
-# potential 
-```
+<!-- # potential  -->
+<!-- ``` -->
 
-```{r}
-msia_adm1 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm1_unhcr_20210211')
-msia_adm2 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm2_unhcr_20210211')
-```
+<!-- ```{r} -->
+<!-- msia_adm1 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm1_unhcr_20210211') -->
+<!-- msia_adm2 <- st_read(dsn = 'data/geospatial/mys_adm_unhcr_20210211_shp/', layer = 'mys_admbnda_adm2_unhcr_20210211') -->
+<!-- ``` -->
 
-```{r}
-tmap_mode('plot')
-```
+<!-- ```{r} -->
+<!-- tmap_mode('plot') -->
+<!-- ``` -->
 
-```{r}
-tm_shape(msia_adm1) + tm_polygons()
-```
+<!-- ```{r} -->
+<!-- tm_shape(msia_adm1) + tm_polygons() -->
+<!-- ``` -->
 
-```{r}
-tm_shape(msia_adm2) + tm_polygons()
-```
+<!-- ```{r} -->
+<!-- tm_shape(msia_adm2) + tm_polygons() -->
+<!-- ``` -->
