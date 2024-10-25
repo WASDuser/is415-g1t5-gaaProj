@@ -109,8 +109,7 @@ crime_district <- crime_district %>%
     filter(state != "Malaysia") %>% 
     filter(category == "assault") %>% 
     filter(district != "All") %>% 
-    filter(type != "all") %>% 
-    filter(date != "2023-01-01")
+    filter(type != "all") 
 ```
 
 formatting the population data table to be simpler
@@ -121,7 +120,7 @@ library(lubridate)
 
 # population_state_filtered <- 
 pop_data <- population_district %>%
-    filter(year(ymd(date)) >= 2016 & year(ymd(date)) <= 2022) %>% 
+    filter(year(ymd(date)) >= 2016 & year(ymd(date)) <= 2023) %>% 
     filter(sex == 'both') %>% 
     filter(age == 'overall') %>% 
     filter(ethnicity == 'overall') %>% 
