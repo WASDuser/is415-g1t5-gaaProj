@@ -9,6 +9,8 @@ website:
         text: Proposal
       - href: 'poster/poster.qmd'
         text: Poster
+      - href: 'data-wrangling/data_wrangling.qmd'
+        text: Data Wrangling
       - href: 'https://williamtjw.shinyapps.io/shinyGeode/'
         text: Shiny App
     right: 
