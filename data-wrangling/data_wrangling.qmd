@@ -3,6 +3,8 @@ title: "Data Wrangling"
 author: William Tan Juin Wei, Marcus Jaeson Yeo, Santhya Thirumarai Selvan
 date: "October 1, 2024"
 date-modified: "last-modified"
+execute: 
+  eval: false
 ---
 
 ```{r}
