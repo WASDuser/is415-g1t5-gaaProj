@@ -110,7 +110,8 @@ crime_district <- crime_district %>%
     filter(state != "Malaysia") %>% 
     filter(category == "assault") %>% 
     filter(district != "All") %>% 
-    filter(type != "all") 
+    filter(type != "all") %>% 
+  filter(year(ymd(date)) >= 2020 & year(ymd(date)) <= 2023)
 ```
 
 formatting the population data table to be simpler
@@ -216,7 +217,8 @@ crime_district<- crime_district%>%
   mutate(district = ifelse(district == "seberang perai utara", "s.p. utara", district)) %>% 
   mutate(district = ifelse(district == "seberang perai selatan", "s.p.selatan", district)) %>% 
   mutate(district = ifelse(district == "petaling jaya", "petaling", district)) %>% 
-   mutate(district = ifelse(district == "matu daro", "matu", district))
+   mutate(district = ifelse(district == "matu daro", "matu", district)) %>% 
+  mutate(state = ifelse(district == "w.p. labuan", "W.P. Labuan", state))
   
 
 pop_data <- pop_data %>% 
@@ -265,17 +267,34 @@ crime_district <- crime_district %>%
 
 ```
 
-Now, we would be able to join the dataframes smoothly.
+We then calculated a ratio that is representative of the crime rate in each district by dividing the number of crimes in each district by the population figures for that district and multiplying this by 1000. We then added a new column to indicate if the district belonged to the West or Peninsular region of Malaysia. Since the West and Peninsular regions are not connected by admin borders, we would have to process these regions separately for our analysis.
+
+```{r}
+  
+rate_crime_district <- crime_district %>% 
+    left_join(pop_data, by = c("district", "state", "date")) %>% 
+    mutate(crime_rate = (crimes / population) * 1000)
+
+# assigning Penisular , East region
+rate_crime_district <- rate_crime_district %>% 
+    mutate(region = case_when(
+        state %in% c("Sabah", "Sarawak", "W.P. Labuan") ~ "East",
+        TRUE ~ "Peninsular"
+  ))
+```
 
 ```{r}
 write_rds(pop_data, "data/rds/pop_data.rds")
 write_rds(crime_district, "data/rds/crime_district.rds")
 write_rds(adm2_sf, "data/rds/adm2_sf.rds")
+write_rds(rate_crime_district, "data/rds/rate_crime_district.rds")
 ```
 
 ```{r}
 pop_data<- read_rds("data/rds/pop_data.rds")
 crime_district <- read_rds("data/rds/crime_district.rds")
 adm2_sf <- read_rds("data/rds/adm2_sf.rds")
+rate_crime_district<-read_rds("data/rds/rate_crime_district.rds")
+
 
 ```
