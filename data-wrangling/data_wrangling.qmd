@@ -96,7 +96,15 @@ Loading in the Packages
 pacman::p_load(spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally)
 ```
 
-Load in the aspatial and spatial data.
+For our project, we will be using three datasets:
+
+-   *crime_district.csv* is a csv file containing data on crimes in Malaysia at the district level
+
+-   population_district.csv is a csv file containing data of the population of Malaysia, also at the district level
+
+-   Malaysia Admin 2 Boundary in shapefile format.
+
+I will be loading them into the R environment using *read_csv()* function of the **readr** package for the aspatial data and the *st_read()* function of the **sf** package for the geospatial data.
 
 ```{r}
 crime_district <- read_csv("data/aspatial/crime_district.csv")
@@ -104,7 +112,9 @@ population_district <- read_csv("data/aspatial/population_district.csv")
 msia_adm2_sf <- st_read(dsn = 'data/geospatial', layer = 'mys_admbnda_adm2_unhcr_20210211')
 ```
 
-formatting the crime data to only include the state names and their respective districts. Also filter out the rows where the data is aggregated across the crime types, as well as across the districts. Since population data is from 2016-2022, we will also remove the 2023 date rows.
+The crime dataset has rows that have crime data aggregated across all the districts, and across all the crime types. It also contains rows where the data is aggregated over just the crime types. All of these rows are grouped by their dates.
+
+Hence, firstly, we will be formatting the crime data to only include the state names and their respective districts, and remove all the rows that contain aggregated values. Since population data is from 2020-2024, we will only keep the data for the years 2020-2023. All of this will be done using the *filter()* function.
 
 ```{r}
 crime_district <- crime_district %>%
@@ -269,10 +279,9 @@ crime_district <- crime_district %>%
 
 ```
 
-We then calculated a ratio that is representative of the crime rate in each district by dividing the number of crimes in each district by the population figures for that district and multiplying this by 1000. We then added a new column to indicate if the district belonged to the West or Peninsular region of Malaysia. Since the West and Peninsular regions are not connected by admin borders, we would have to process these regions separately for our analysis.
+We then calculated a ratio that is representative of the crime rate in each district by dividing the number of crimes in each district by the population figures for that district and multiplying this by 1000. We then added a new column to the boundary and the crime rate dataframes to indicate if the district belonged to the West or Peninsular region of Malaysia. Since the West and Peninsular regions are not connected by admin borders, we would have to process these regions separately for our analysis.
 
 ```{r}
-  
 rate_crime_district <- crime_district %>% 
     left_join(pop_data, by = c("district", "state", "date")) %>% 
     mutate(crime_rate = (crimes / population) * 1000)
@@ -280,9 +289,13 @@ rate_crime_district <- crime_district %>%
 # assigning Penisular , East region
 rate_crime_district <- rate_crime_district %>% 
     mutate(region = case_when(
-        state %in% c("Sabah", "Sarawak", "W.P. Labuan") ~ "East",
+        state %in% c("Sabah", "Sarawak") ~ "East",
         TRUE ~ "Peninsular"
   ))
+adm2_sf <- adm2_sf %>%
+  mutate(region = case_when(
+        ADM1_EN %in% c("Sabah", "Sarawak") ~ "East",
+        TRUE ~ "Peninsular"))
 ```
 
 ```{r}
