@@ -1,0 +1,868 @@
+---
+title: "Take-Home Exercise 3: Prototyping Modules for Geospatial Analytics Shiny Application"
+author: "Marcus Jaeson Yeo"
+date: "October 27, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+## 1.0 Overview
+
+### 1.1 Objectives
+
+-   To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN,
+
+-   To prepare and test the specific R codes can be run and returned the correct output as expected,
+
+-   To determine the parameters and outputs that will be exposed on the Shiny applications, and
+
+-   To select the appropriate Shiny UI components for exposing the parameters determine above.
+
+### 1.2 Focus
+
+The focus within this Take-Home Exercise, as part of the group project, would be our geographical and aspatial target on:
+
+-   districts within East Malaysia (Sabah, Sarawak, W.P Labuan)
+
+    -   \[Profile of East Malaysia\](https://www.mavcom.my/en/industry/public-service-obligations/profile-of-east-malaysia/#:\~:text=East%20Malaysia%20(consisting%20of%20the,by%20the%20South%20China%20Sea.)
+
+-   category: assault
+
+-   type: all types
+
+We will be discovering **all types** trends that take place within the **districts** of **East Malaysia**, across the years **2020-2023**, discovering the emerging hot spots and cold spots, outliers, as well as determine the spatial autocorrelation within these districts.
+
+### 1.3 Prototyping for Shiny Application
+
+## 2.0 Load packages
+
+-   sf
+
+-   tmap
+
+-   tidyverse
+
+-   spdep
+
+-   sfdep
+
+-   dplyr
+
+-   tidyr
+
+```{r}
+pacman::p_load(sf, tmap, tidyverse, spdep, sfdep, dplyr, tidyr)
+```
+
+## 3.0 Importing Data and Data Wrangling
+
+### 3.1 Raw Data
+
+-   geospatial
+
+```{r}
+
+msia_adm2 <- st_read(dsn = 'data/geospatial/', layer = 'mys_admbnda_adm2_unhcr_20210211')
+# msia_adm2_shp <- st_read(dsn = 'data/geospatial/mys_admbnda_adm1_unhcr_20210211.shp')
+```
+
+-   aspatial
+
+```{r}
+msia_sf <- read_csv('data/aspatial/crime_district.csv')
+
+```
+
+### 3.2 Geospatial Wrangling
+
+```{r}
+plot(msia_adm2["ADM2_EN"])
+```
+
+Upon plotting out the shapefile of Admin level 2, we can see that it takes both East and West Malaysia. However, we only want East Malaysia (Sabah, Sarawak).
+
+```{r}
+unique(msia_adm2$ADM1_EN)
+```
+
+We will convert all to lowercase and do necessary trimming for appropriate left-join later to combine with our working data.
+
+```{r}
+msia_adm2 <- msia_adm2 %>%
+  mutate(ADM1_EN = str_to_lower(ADM1_EN),  
+         ADM1_EN = str_trim(ADM1_EN)) %>%
+  mutate(ADM2_EN = str_to_lower(ADM2_EN),  
+       ADM2_EN = str_trim(ADM2_EN)) 
+```
+
+Now, we separate East Malaysia, only filtering "sabah", "sarawak", "w.p. labuan" regions. We will select only the necessary columns: ADM1_EN, ADM2_EN, geometry.
+
+```{r}
+msia_adm2_east <- msia_adm2 %>%
+  filter(ADM1_EN %in% c("sabah", "sarawak", "w.p. labuan")) %>%
+  select("ADM1_EN", "ADM2_EN", "geometry")
+
+msia_adm2_east
+```
+
+Now, when we plot back, we can see that only East Malaysia polygon shapes are filtered.
+
+```{r}
+plot(msia_adm2_east)
+```
+
+3 states, 57 districts
+
+```{r}
+unique(msia_adm2_east$ADM1_EN)
+unique(msia_adm2_east$ADM2_EN)
+```
+
+### 3.3 Aspatial Wrangling
+
+-   Likewise, we do filtering and wrangling on the **state** and **district, category: assault** and **type: rape.**
+
+First, we see the columns and rows available in sf using glimpse.
+
+```{r}
+glimpse(msia_sf)
+
+```
+
+```{r}
+msia_sf <- msia_sf %>%
+  mutate(state = str_to_lower(state),  
+         state = str_trim(state)) %>%
+  mutate(district = str_to_lower(district),  
+       district = str_trim(district)) 
+```
+
+Now, we separate East Malaysia, only filtering "sabah" and "sarawak" regions. We will select only the necessary columns: ADM1_EN, ADM2_EN, geometry.
+
+```{r}
+msia_sf_east <- msia_sf %>%
+  filter(state %in% c("sabah", "sarawak"), 
+         category == "assault") %>%
+  filter(type != "all")
+
+msia_sf_east
+```
+
+```{r}
+unique(msia_sf_east$type)
+```
+
+We see that we do not need the "all" results for districts and we need to do a sorting by their date of occurrence in ascending order.
+
+```{r}
+msia_sf_east <- msia_sf_east %>%
+  filter(year(ymd(date)) >= 2020 & year(ymd(date)) <= 2023) %>%
+  filter(district != "all") %>%
+  arrange(date) 
+```
+
+[**Dealing with Inconsistencies and mispelled districts**]{.underline}
+
+-   **"kota kinabatangan"** in `msia_sf_east$district` should be **"kinabatangan"** as in `msia_adm2_east$ADM2_EN`.
+
+    -   rename "kota kinbatangan" to "kinabatangan" in `msia_sf_east$district`
+
+-   **"matu daro"** in `msia_sf_east$district` might represent two separate districts: **"matu"** and **"daro"** in `msia_adm2_east$ADM2_EN`.
+
+    -   will split first half of the (matu daro) rows take matu, second half take daro, impute with the average of the crimes of matu daro rows in `msia_sf_east$district`
+
+-   **"padawan"** in `msia_sf_east$district` does not appear in `msia_adm2_east$ADM2_EN`, as Padawan is often categorized within **"kuching"** but may need verification as a separate district.
+
+    -   follow shapefile, so we rename "**padawan"** in `msia_sf_east$district` to "**kuching"**
+
+-   **"w.p. labuan"** appears in `msia_sf_east$district` but is not listed in `msia_adm2_east$ADM2_EN`, which could be due to handling federal territories separately.
+
+    -   Update "w.p. labuan" as a separate state and district in `msia_sf_east$district`
+
+-   **"kota samarahan"** in `msia_sf_east$district` should be **"samarahan"** as in `msia_adm2_east$ADM2_EN`.
+
+    -   rename **"kota samarahan"** to **"samarahan"** in `msia_sf_east$district`
+
+```{r}
+msia_sf_east_dealt <- msia_sf_east %>%
+  mutate(district = gsub("^kota kinabatangan$", "kinabatangan", district),  # Rename "kota kinbatangan" to "kinabatangan"
+         district = gsub("^padawan$", "kuching", district),
+         district = gsub("^kota samarahan$", "samarahan", district)) %>% #rename "padawan" to "kuching" 
+  
+  # Update "w.p. labuan" as a separate state and district
+  mutate(
+    state = if_else(state == "sabah" & district == "w.p. labuan", "w.p. labuan", state),
+    district = if_else(state == "w.p. labuan" & district == "w.p. labuan", "w.p. labuan", district)
+  )
+
+```
+
+-   impute average for matu daro, and split matu and daro
+
+```{r}
+split_matu_daro <- function(data) {
+  # Filter rows for "matu daro"
+  matu_daro_data <- data %>%
+    filter(district == "matu daro")
+  print(matu_daro_data)
+  
+  # Calculate the average crimes for "matu" and "daro" from all entries
+  total_crimes <- sum(matu_daro_data$crimes) # Total crimes
+  num_entries <- nrow(matu_daro_data)        # Number of entries
+  
+  # Average for both "matu" and "daro"
+  average_crime <- round(total_crimes / num_entries) # Round to nearest whole number
+  print(average_crime)
+  
+   # Calculate midpoint for splitting the data
+  midpoint <- ceiling(num_entries / 2) # Use ceiling to handle odd numbers
+  
+  # Create new entries for "matu" and "daro"
+  new_entries <- bind_rows(
+    mutate(matu_daro_data[1:midpoint, ], district = "matu", crimes = average_crime), # First half for "matu"
+    mutate(matu_daro_data[(midpoint + 1):num_entries, ], district = "daro", crimes = average_crime) # Second half for "daro"
+  )
+  
+  # Print new entries for debugging
+  print(new_entries)
+  return(new_entries)
+}
+
+matu_daro_split <- split_matu_daro(msia_sf_east_dealt)
+
+# Combine the new entries with the existing data, removing old "matu daro" entries
+msia_sf_east_final <- msia_sf_east_dealt %>%
+  filter(district != "matu daro") %>%
+  bind_rows(matu_daro_split)
+
+```
+
+3 states, 48 districts
+
+```{r}
+unique(msia_sf_east_final$state)
+unique(msia_sf_east_final$district)
+```
+
+### 3.4 Combine Data
+
+```{r}
+msia_left_join <- msia_adm2_east %>%
+  left_join(msia_sf_east_final, by = c("ADM1_EN" = "state", "ADM2_EN" = "district"))
+```
+
+```{r}
+missing_values <- msia_left_join %>%
+  filter(is.na(crimes)) # Replace 'crimes' with the relevant column(s) you want to check
+
+print(missing_values)
+```
+
+After left-joining, we see that these are the columns that are not present in our working data but are present in our boundary data, we thus have no choice but to drop them.
+
+```{r}
+
+msia_left_join <- msia_left_join %>%
+  filter(!is.na(crimes)) %>%
+  arrange(date) %>%
+  select(1:2, 4:7) 
+  
+```
+
+```{r}
+write_rds(msia_left_join, "data/rds/msia_left_join.rds")
+```
+
+### 3.5 Pivot longer to reduce number of rows
+
+```{r}
+msia_total_crimes <- msia_left_join %>%
+  # Ensure 'date' is of Date type, if not already
+  mutate(date = as.Date(date)) %>%
+  # Extract year from the date
+  mutate(year = year(date)) %>%
+  # Group by ADM1_EN, ADM2_EN, geometry, and type, then summarize crimes across all years
+  group_by(ADM1_EN, ADM2_EN, geometry, type) %>%
+  summarise(total_type_crimes = sum(crimes, na.rm = TRUE), .groups = "drop") %>%
+  # Pivot wider to create columns for each crime type across all years
+  pivot_wider(
+    names_from = type,
+    values_from = total_type_crimes,
+    names_prefix = "total_crimes_",
+    values_fill = list(total_type_crimes = 0)
+  ) %>%
+  # Add a total_crimes column summing across all types for each district
+  rowwise() %>%
+  mutate(total_crimes = sum(c_across(starts_with("total_crimes_")), na.rm = TRUE)) %>%
+  ungroup() %>%
+  # Keep ADM1_EN, ADM2_EN, and geometry as required, and reorder columns
+  select(ADM2_EN, ADM1_EN, geometry, total_crimes, everything())
+  
+# View the resulting dataset
+print(msia_total_crimes)
+  
+
+```
+
+```{r}
+
+msia_left_join_pivot <- msia_left_join %>%
+  # Ensure 'date' is of Date type, if not already
+  mutate(date = as.Date(date)) %>%
+  # Extract year from the date
+  mutate(year = year(date)) %>%
+  # Group by the necessary columns and summarize
+  group_by(ADM1_EN, ADM2_EN, geometry, type, year) %>%
+  # Summarize the crimes for each group, summing them up
+  summarise(crimes = sum(crimes, na.rm = TRUE), .groups = "drop") %>%
+  # Pivot wider to create crime columns for each year
+  pivot_wider(
+    # names_from = year, 
+    names_from = c(type, year),
+    values_from = crimes,
+    names_prefix = "crimes_",
+    # names_prefix = "crimes_",
+    values_fill = list(crimes = NULL)  # Fill NA values with NULL
+  ) 
+
+# View the resulting dataset
+print(msia_left_join_pivot)
+
+```
+
+### 3.6 Projection Transformation
+
+Acquiring the code from <https://epsg.io/32649>,
+
+-   We will transform the it to East Malaysias's projected coordinate system (UTM Zone 49N) with the EPSG code: 32649
+
+```{r}
+st_crs(msia_total_crimes)
+```
+
+```{r}
+
+msia <- msia_left_join_pivot %>%
+  st_transform(crs=32649)
+
+msia_total_crimes <- msia_total_crimes %>%
+    st_transform(crs=32649)
+
+```
+
+```{r}
+st_crs(msia_total_crimes)
+```
+
+### 3.7 Visualisation
+
+### 3.8 Write/Read rds
+
+```{r}
+write_rds(msia_total_crimes, "data/rds/msia_total_crimes.rds")
+```
+
+```{r}
+write_rds(msia, "data/rds/msia.rds")
+
+```
+
+```{r}
+msia <- read_rds("data/rds/msia.rds")
+```
+
+```{r}
+msia_total_crimes <- read_rds("data/rds/msia_total_crimes.rds")
+```
+
+```{r}
+east_msia <- read_rds("data/rds/EAST_MSIA.rds")
+```
+
+## 4.0 Shiny Visualisation / Shiny Storyboard
+
+Below are screenshots from the shiny app depicting our Shiny Storyboard for East Malaysia
+
+-   EDA
+
+    -   Basemap
+
+        -   Basemap depicting all the different districts within East Malaysia
+
+    ![](images/clipboard-1910243840.png)
+
+    -   Visualisation with different classification methods
+
+        -   Able to filter based on total crimes, and other types such as rape, murder
+
+        -   Able to filter based on classification methods such as equal, quantile, pretty
+
+        -   Different Colour Schemes, Number of classes, and Transparency are also able to be adjusted
+
+![](images/clipboard-2140389107.png)
+
+## 6.0 Spatial Weights and Applications
+
+## 6.0 Global Measures of Spatial Autocorrelation
+
+```{r}
+
+wm_q <- poly2nb(msia_total_crimes, 
+                queen = TRUE)
+
+summary(wm_q)
+
+```
+
+-   If we attempt to use contiguity-based spatial weights to find neighbours, and use the queen method, we come up with a region that is not linked to any neighbours, which is incorrect.
+
+Lets print out the region with the 0 link. It turns out to be "w.p. labuan".
+
+```{r}
+print(c(msia_total_crimes$ADM1_EN[48], msia_total_crimes$ADM2_EN[48]))
+```
+
+Hence, instead of using contiguity-based methods to find neighbours, we need to swap to using distance-based methods instead to find neighbours and do our global spatial autocorrelation.
+
+### 6.1 Configuring and Binding coordinates
+
+#### Computing longitude and latitude to achieve coordinates
+
+-   longitude
+
+```{r}
+longitude <- map_dbl(msia_total_crimes$geometry, ~st_centroid(.x)[[1]])
+```
+
+-   latitude
+
+```{r}
+latitude <- map_dbl(msia_total_crimes$geometry, ~st_centroid(.x)[[2]])
+```
+
+-   bind the coordinates
+
+```{r}
+coords <- cbind(longitude, latitude)
+```
+
+```{r}
+head(coords)
+```
+
+### 6.2 Computing distance-based neighbours
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords, longlat = FALSE))
+summary(k1dists)
+
+```
+
+::: callout-note
+## This summary report shows that the largest first nearest neighbour distance is 111017 meters (UTM). As dnearneigh accepts meters and we need specify longlat = FALSE, lets round it up to 111100 meters and use this as our upper threshold will ensure us that all regions will at least have 1 neighbour.
+:::
+
+### 6.2.1 Attempting Fixed Distance
+
+-   within 111100 meters radius
+
+```{r}
+wm_d111100 <- dnearneigh(coords, 0, 111100, longlat = FALSE)
+wm_d111100
+```
+
+```{r}
+n_comp <- n.comp.nb(wm_d111100)
+n_comp$nc
+```
+
+```{r}
+table(n_comp$comp.id)
+```
+
+#### Plotting fixed distance weight matrix
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+
+# Plot the boundary and neighborhood structures with adjusted limits
+plot(msia_total_crimes$geometry, border="lightgrey")
+plot(wm_d111100, coords, add=TRUE)
+plot(k1, coords, add=TRUE, col="red", length=0.08)
+```
+
+-   Plot 1st nearest neighbours (red lines)
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+
+# par(mfrow=c(1,2))
+plot(msia_total_crimes$geometry, border="lightgrey", main="1st nearest neighbours")
+plot(k1, coords, add=TRUE, col="red", length=0.08)
+# plot(msia_total_crimes$geometry, border="lightgrey", main="Distance link")
+# plot(wm_d111000, coords, add=TRUE, pch = 19, cex = 0.6)
+```
+
+### 6.2.2 Attempting Adaptive Distance
+
+#### Computing Adaptive Distance Weight matrix
+
+-   Lets fix k=6, and no go too far ahead as greater the k, the further the search of neighbours would be.
+
+```{r}
+knn6 <- knn2nb(knearneigh(coords, k=6))
+knn6
+```
+
+```{r}
+print(knn6)
+```
+
+```{r}
+str(knn6)
+```
+
+```{r}
+# table(msia$ADM2_EN, card(knn6))
+```
+
+#### Plotting adaptive distance weight matrix in Shiny
+
+![](images/clipboard-405232185.png)
+
+[**Decision:**]{.underline}
+
+Both fixed distance and adaptive distance can be used. However, we need to take note that there are centroids located at the North-East side, on sea instead of on land due to multiple islands.
+
+### 6.2.3 Global Moran I: Access Spatial Autocorrelation using Adaptive Distance
+
+Next, *nb2listw()* is used to convert the nb object into spatial weights object.
+
+We should also fix our style="w".
+
+```{r}
+rsknn6 <- nb2listw(knn6, 
+                   style="W", 
+                   zero.policy = TRUE)
+rsknn6
+```
+
+#### 1. Global Moran's I Test
+
+```{r}
+moran.test(msia_total_crimes$total_crimes, 
+           listw=rsknn6, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+
+#### 2. .Computing Monte Carlo Moran's I
+
+-   set a seed of 1234
+
+-   number of simulations = 1000
+
+```{r}
+set.seed(1234)
+bperm_moran= moran.mc(msia_total_crimes$total_crimes, 
+                listw=rsknn6, 
+                nsim=999, 
+                zero.policy = TRUE, 
+                na.action=na.omit)
+bperm_moran
+```
+
+-   moran I statistic: -0.021513 \< 0 show signs of regularity, however weak.
+
+-   p-value = 0.412 \> 0.05, at the 95% confidence interval, we fail to reject the null hypothesis (which assumes spatial randomness), meaning to say that we do not have enough evidence to conclude that there is significant spatial autocorrelation and clustering.
+
+Hence, we accept null hypothesis (h0), and conclude that the result is not statistically significant, suggesting that the observed spatial pattern could be due to spatial randomness.
+
+#### 3. Visualising Monte Carlo Moran's I using Shiny
+
+Computing some basic statistics
+
+```{r}
+#compute mean
+mean(bperm_moran$res[1:999])
+cat('\n')
+
+#compute variance
+var(bperm_moran$res[1:999])
+cat('\n')
+
+#summary bperm
+summary(bperm_moran$res[1:999])
+```
+
+-   plotting histogram using ggplot2 in Shiny
+
+![](images/clipboard-396864859.png)
+
+### 6.3 Spatial Correlogram
+
+#### Compute Moran's I Spatial Correlogram
+
+In the code chunk below, [`sp.correlogram()`](https://r-spatial.github.io/spdep/reference/sp.correlogram.html) of **spdep** package is used to compute a [**6-lag**]{.underline} spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The **plot()** of base Graph is then used to plot the output.
+
+```{r}
+MI_corr <- sp.correlogram(knn6,                            
+                          msia_total_crimes$total_crimes,
+                          order=6,  #lag-value: 6                           
+                          method="I",                            
+                          style="W",
+                          zero.policy = TRUE) 
+
+plot(MI_corr)
+```
+
+-   Looking at the first lag, it is close to 0, showing signs of randomness. This suggests that the total crimes of Thailand does not have spatial dependence. the following lags after shows negative Moran I, showing signs of regular patterns amongst 2nd order neighbours and below.
+
+By plotting the output might not allow us to provide complete interpretation. This is because not all autocorrelation values are statistically significant. Hence, it is important for us to examine the full analysis report by printing out the analysis results as in the code chunk below.
+
+```{r}
+print(MI_corr)
+```
+
+## 7.0 Local Measures of Spatial Autocorrelation
+
+We need to use fixed-distance and adaptive-distance based methods for more reliable results.
+
+-   Local Moran's I: Detect local clusters (high-high and low-low) and local outliers (high-low, low-high)
+
+### 7.1 Adaptive Distance Weight Matrix
+
+-   stick to k=6, style='W'
+
+```{r}
+knn6 <- knn2nb(knearneigh(coords, k=6))
+knn6
+```
+
+Next, *nb2listw()* is used to convert the nb object into spatial weights object.
+
+```{r}
+knn6_lw <- nb2listw(knn6, style = 'W')
+summary(knn6_lw)
+```
+
+Here, we can see that all 48 districts in East Malaysia have exactly 6 links.
+
+### 7.2 LISA
+
+### 7.2.1 Computing Local Moran's I
+
+```{r}
+fips <- order(msia_total_crimes$ADM2_EN)
+localMI <- localmoran(msia_total_crimes$total_crimes, knn6_lw)
+head(localMI)
+```
+
+```{r}
+printCoefmat(data.frame(
+  localMI[fips,], 
+  row.names=msia_total_crimes$ADM2_EN[fips]),
+  check.names=FALSE)
+```
+
+### 7.2.2 Mapping local Moran's I
+
+#### Append to local Moran's I dataframe
+
+```{r}
+msia_total_crimes.localMI <- cbind(msia_total_crimes,localMI) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
+```
+
+#### Visualising local Moran's I statistic values and p-values
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+
+localMI_statistic.map <- tm_shape(msia_total_crimes.localMI) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "local Moran's I statistic") +
+  tm_borders(alpha = 0.5) + 
+  tm_layout(
+    main.title = "local Moran's I statistic",
+    main.title.size = 1,
+    main.title.position = "center")
+
+localMI_pvalues.map <- tm_shape(msia_total_crimes.localMI) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "local Moran's I p-values") +
+  tm_borders(alpha = 0.5) + 
+  tm_layout(
+    main.title = "local Moran's I p-values",
+    main.title.size = 1,
+    main.title.position = "center")
+
+tmap_arrange(localMI_statistic.map, localMI_pvalues.map, asp=1, ncol=2)
+```
+
+write to rds so that can be read in the ShinyApp file.
+
+```{r}
+write_rds(localMI_statistic.map, "data/rds/localMI_statistic.map.rds")
+write_rds(localMI_pvalues.map, "data/rds/localMI_pvalues.map.rds")
+```
+
+### 7.3 Creating LISA Cluster Map
+
+-   In the Shiny App, under Local Measures tab, the following screenshot depicts selection between Moran Scatterplot and Moran Scatterplot with Standardized variable
+
+![](images/clipboard-2091516722.png)
+
+### 7.3.1 Plotting Moran scatterplot
+
+```{r}
+nci <- moran.plot(msia_total_crimes$total_crimes, knn6_lw,                   
+                  labels=as.character(msia_total_crimes$ADM2_EN),
+                  xlab="Total Cases over all years",                    
+                  ylab="Spatially Lag Total Cases over all years")
+
+```
+
+### 7.3.2 Plotting Moran scatterplot with standardized variable
+
+```{r}
+msia_total_crimes$Z.total_crimes<- scale(msia_total_crimes$total_crimes) %>% 
+  as.vector 
+```
+
+```{r}
+nci2 <- moran.plot(msia_total_crimes$total_crimes, knn6_lw,                   
+                  labels=as.character(msia_total_crimes$ADM2_EN),
+                  xlab="z- Total Cases over all years",                    
+                  ylab="Spatially Lag z- Total Cases over all years")
+```
+
+### 7.3.3 LISA map classes
+
+```{r}
+quadrant <- vector(mode="numeric",length=nrow(localMI))
+msia_total_crimes$lag_total_crimes <- lag.listw(knn6_lw, msia_total_crimes$total_crimes)
+
+DV <- msia_total_crimes$lag_total_crimes - mean(msia_total_crimes$lag_total_crimes)    
+LM_I <- localMI[,1] - mean(localMI[,1])    
+signif <- 0.05       
+quadrant[DV <0 & LM_I>0] <- 1
+quadrant[DV >0 & LM_I<0] <- 2
+quadrant[DV <0 & LM_I<0] <- 3  
+quadrant[DV >0 & LM_I>0] <- 4     
+quadrant[localMI[,5]>signif] <- 0
+```
+
+### 7.3.4 **Plotting LISA map**
+
+-   In Shiny: LISA Map
+
+![](images/clipboard-573219080.png)
+
+```{r}
+#|fig-width: 12
+#|fig-height: 10
+
+total_crimes <- qtm(msia_total_crimes, "total_crimes")
+
+
+msia_total_crimes.localMI$quadrant <- quadrant
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap <- tm_shape(msia_total_crimes.localMI) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant)))+1], 
+          labels = clusters[c(sort(unique(quadrant)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(total_crimes, LISAmap, 
+             asp=1, ncol=2)
+```
+
+```{r}
+outliers_hotspots <- msia_total_crimes.localMI %>%
+  filter(quadrant %in% c(1, 2, 3, 4)) %>%
+  mutate(cluster = case_when(
+    quadrant == 1 ~ "Low-Low (Hotspot)",
+    quadrant == 2 ~ "Low-High (Outlier)",
+    quadrant == 3 ~ "High-Low (Outlier)",
+    quadrant == 4 ~ "High-High (Hotspot)",
+    TRUE ~ "Insignificant"  # Just a fallback, should not occur
+  ))
+
+# Print the results
+print(outliers_hotspots[, c("ADM1_EN", "quadrant", "cluster")])
+```
+
+### 7.4 Computing Gi Statistics (total cases over the years)
+
+Next, we need to perform Gi Statistics, for each fixed distance and adaptive distances. The computed Gi statistic will give us a representation of a Z-score. Greater [**local Gi**]{.underline} represent a greater intensity of **clustering** and the direction (positive or negative) indicates **high or low clusters.**
+
+### 7.4.1 Gi statistics for adaptive distance
+
+```{r}
+fips <- order(msia_total_crimes$ADM2_EN) 
+gi.adaptive <- localG(msia_total_crimes$total_crimes, knn6_lw) 
+msia_total_crimes.gi <- cbind(msia_total_crimes, as.matrix(gi.adaptive)) %>%   
+  rename(gstat_adaptive = as.matrix.gi.adaptive.)  
+
+# Find the threshold for hotspot areas (e.g., top 5% of Gi scores) 
+threshold <- quantile(msia_total_crimes.gi$gstat_adaptive, 0.95)    
+hotspots <- msia_total_crimes.gi %>%   
+  filter(gstat_adaptive >= threshold)
+```
+
+```{r}
+hotspots_province_gstatscore <- hotspots %>%   
+  select(ADM2_EN, gstat_adaptive) %>%   
+  arrange(desc(gstat_adaptive))   
+
+print(hotspots_province_gstatscore)
+```
+
+### 7.4.2 Plotting and Mapping Gi values with adaptive distance weights
+
+-   In Shiny: Gi Map
+
+![](images/clipboard-1323571806.png)
+
+```{r}
+#| fig-width: 12 
+#| fig-height: 10  
+
+Gimap <- tm_shape(msia_total_crimes.gi) +    
+  tm_fill(col = "gstat_adaptive",            
+          style = "pretty",            
+          palette="-RdBu",            
+          title = "local Gi") +    
+  tm_borders(alpha = 0.5) +   
+  tm_shape(hotspots) +    
+  tm_text("ADM2_EN", size = 0.7, col="blue") +    
+  tm_layout(     
+    main.title = "Gi map showing hotspots",     
+    main.title.size = 1,     
+    main.title.position = "center",     
+    legend.show = TRUE,     
+    legend.text.size = 1,   # Reduce the text size     
+    frame = FALSE)     
+
+Gimap 
+```
+
+-   Similarly, what inference can we draw from the adaptive-based plot?
+
+    -   Two **hotspots** (red) are identified in East Malaysia, with both hotspots located around the central region. These hotspots comprise the provinces of **Simunjan, Lundu,** and **Bau**, with gstat_adaptive scores ranging from approximately 2.00 to 2.10. This suggests these provinces have higher case concentrations compared to their neighbors, indicating positive spatial clustering.
