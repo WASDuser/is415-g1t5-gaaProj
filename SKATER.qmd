@@ -1,0 +1,204 @@
+---
+title: "SKATER"
+author: "William"
+date: "October 16, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: false
+  echo: true
+  freeze: true
+format: 
+  html:
+    code-fold: true
+    code-tools: true
+    code-link: true
+---
+
+```{r}
+pacman::p_load(spdep, tmap, sf, ClustGeo, 
+               ggpubr, cluster, factoextra, NbClust,
+               heatmaply, corrplot, psych, tidyverse, GGally)
+```
+
+Load data
+
+```{r}
+original_sf <- read_rds('data/crime_merged.rds')
+```
+
+```{r}
+crime_merged_sf <- read_rds('data/crime_merged.rds')
+unique(crime_merged_sf$region)
+```
+
+```{r}
+selected_year <- 2023
+selected_region <- 'Peninsular'
+selected_type <- 'causing_injury'
+
+peninsular_crime_merged_sf <- crime_merged_sf %>% 
+  filter(year==selected_year, region==selected_region, type==selected_type)
+
+str(peninsular_crime_merged_sf)
+```
+
+Derive boundary and numeric attribute data
+
+```{r}
+peninsular_sf_data <- peninsular_crime_merged_sf
+peninsular_attribute_data <- peninsular_crime_merged_sf %>% select(crimes, crime_rate) %>% st_drop_geometry()
+
+# east_sf_data <- east_crime_merged_sf
+# east_attribute_data <- east_crime_merged_sf %>% 
+#   select(where(is.numeric)) %>% st_drop_geometry()
+```
+
+```{r}
+str(peninsular_attribute_data)
+```
+
+Derive `crime_merged_sf_cluster`
+
+```{r}
+peninsular_proxmat <- dist(peninsular_attribute_data, method = 'euclidean')
+peninsular_hclust_ward <- hclust(peninsular_proxmat, method = 'ward.D')
+peninsular_groups <- as.factor(cutree(peninsular_hclust_ward, k=6))
+peninsular_sf_cluster <- cbind(peninsular_sf_data, as.matrix(peninsular_groups)) %>% 
+  rename(`peninsular_CLUSTER`=`as.matrix.peninsular_groups.`)
+
+
+# east_proxmat <- dist(east_attribute_data, method = 'euclidean')
+# east_hclust_ward <- hclust(east_proxmat, method = 'ward.D')
+# east_groups <- as.factor(cutree(east_hclust_ward, k=6))
+# east_sf_cluster <- cbind(east_sf_data, as.matrix(east_groups)) %>% 
+#   rename(`east_CLUSTER`=`as.matrix.east_groups.`)
+```
+
+```{r}
+peninsular_sp <- as_Spatial(peninsular_sf_data)
+peninsular_nb <- poly2nb(peninsular_sp)
+peninsular_coords <- st_coordinates(st_centroid(st_geometry(peninsular_sf_data)))
+
+# east_sp <- as_Spatial(east_sf_data)
+# east_nb <- poly2nb(east_sp)
+# east_coords <- st_coordinates(st_centroid(st_geometry(east_sf_data)))
+```
+
+```         
+For 
+selected_year <- 2016
+selected_region <- 'Peninsular'
+selected_type <- 'causing_injury',
+
+peninsular_nb:
+
+Neighbour list object:
+Number of regions: 86 
+Number of nonzero links: 394 
+Percentage nonzero weights: 5.327204 
+Average number of links: 4.581395 
+1 region with no links:
+17
+3 disjoint connected subgraphs
+```
+
+Dealing with outer islands
+
+```{r}
+peninsular_nb[17] <- as.integer(64)
+peninsular_nb[[69]] <- append(peninsular_nb[[69]], as.integer(68))
+```
+
+```{r}
+plot(st_geometry(peninsular_sf_data), border=grey(.5))
+plot(peninsular_nb, 
+     peninsular_coords, 
+     col="blue", 
+     add=TRUE)
+
+# plot(st_geometry(east_sf_data), border=grey(.5))
+# plot(east_nb,
+#      east_coords,
+#      col="blue",
+#      add=TRUE)
+```
+
+```{r}
+# debugging
+
+# finds out how many subgraphs
+# disjointed_sub <- n.comp.nb(peninsular_nb)$nc #3
+# temp_nb <- peninsular_nb
+# temp_sf <- peninsular_sf_data
+
+
+components <- n.comp.nb(peninsular_nb)
+distance_matrix <-  st_distance(st_centroid(st_geometry(peninsular_sf_data)))
+
+
+for (i in 1:(components$nc - 1)) {
+  for (j in (i + 1):components$nc) {
+    
+    # Get indices of points in each component
+    component_i <- which(components$comp.id == i)
+    component_j <- which(components$comp.id == j)
+    
+    # Subset distance matrix for points in the two components
+    sub_distance_matrix <- distance_matrix[component_i, component_j, drop = FALSE]
+    
+    # Find the minimum distance and the corresponding indices
+    min_dist <- which(sub_distance_matrix == min(sub_distance_matrix), arr.ind = TRUE)
+    
+    # Get the original indices in peninsular_sf
+    point_i <- component_i[min_dist[1, 1]]
+    point_j <- component_j[min_dist[1, 2]]
+    
+    # Add neighbors in both directions to connect the components
+    peninsular_nb[[point_i]] <- unique(c(peninsular_nb[[point_i]], point_j))
+    peninsular_nb[[point_j]] <- unique(c(peninsular_nb[[point_j]], point_i))
+  }
+}
+
+n.comp.nb(peninsular_nb)$nc
+```
+
+```{r}
+# error here
+peninsular_lcosts <- nbcosts(peninsular_nb, peninsular_attribute_data)
+peninsular_crime_merged_w <- nb2listw(peninsular_nb, peninsular_lcosts, style="B")
+peninsular_crime_merged_mst <- mstree(peninsular_crime_merged_w)
+peninsular_clustN <- spdep::skater(edges = peninsular_crime_merged_mst[,1:2], 
+                 data = peninsular_attribute_data, 
+                 method = "euclidean", 
+                 ncuts = 5)
+```
+
+```{r}
+# east_lcosts <- nbcosts(east_nb, east_attribute_data)
+# east_crime_merged_w <- nb2listw(east_nb, east_lcosts, style="B")
+# east_crime_merged_mst <- mstree(east_crime_merged_w)
+# east_clustN <- spdep::skater(edges = east_crime_merged_mst[,1:2], 
+#                  data = east_attribute_data, 
+#                  method = "euclidean", 
+#                  ncuts = 5)
+```
+
+```{r}
+groups_mat <- as.matrix(peninsular_clustN$groups)
+sf_spatialcluster <- cbind(peninsular_sf_cluster, as.factor(groups_mat)) %>%
+  rename(`Skater_CLUSTER`=`as.factor.groups_mat.`)
+```
+
+```{r}
+hclust.map <- qtm(peninsular_sf_cluster, "peninsular_CLUSTER") + 
+  tm_borders(alpha = 0.5) 
+# +
+#   tm_layout(legend.position = c(0.8, 0.6))
+
+shclust.map <- qtm(sf_spatialcluster, "Skater_CLUSTER") + 
+  tm_borders(alpha = 0.5) 
+# +
+#   tm_layout(legend.position = c(0.8, 0.6))
+
+tmap_arrange(hclust.map, shclust.map, asp=NA, ncol=2)
+```
