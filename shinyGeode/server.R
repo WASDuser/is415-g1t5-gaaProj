@@ -86,12 +86,29 @@ function(input, output, session) {
     })
     
     
+    # Display summary statistics
+    output$summary_table <- renderPrint({
+        req(input$submit_eda)    # Ensure that the submit button has been clicked
+        req(input$variable)       # Ensure that a variable has been selected
+        
+        data <- dataset_reactive()
+        variable <- data[[input$variable]] # Get the selected variable
+        summary_output <- summary(as.data.frame(variable)) # Get summary statistics
+        colnames(summary_output) <- input$variable # Set the selected variable as column name
+        
+        summary_output
+    })
+    
+    
     # Dynamic chart type options
     observeEvent(input$var_type, {
         updateSelectInput(session, "chart_type", choices = if (input$var_type == "cat") {
             c("Bar Chart")
         } else {
-            c("Histogram", "Boxplot", "Time Series")
+            # [FIX] - time-series plot
+            # c("Histogram", "Boxplot", "Time Series")
+            
+            c("Histogram", "Boxplot")
         })
     })
     
@@ -115,23 +132,18 @@ function(input, output, session) {
             } else if (input$chart_type == "Boxplot") {
                 ggplot(data, aes(y = .data[[input$variable]])) + geom_boxplot(fill=color)
                 
-            } else if (input$chart_type == "Time Series") {
-                ggplot(data, aes(x = "year", y = .data[[input$variable]])) + geom_line()
             }
+            # [FIX] - time-series plot
+            # else if (input$chart_type == "Time Series") {
+            #     data$date.y <- as.Date(data$date.y)
+            #     data <- data %>% 
+            #         group_by(date.y) %>% 
+            #         summarise(value = mean(.data[[input$variable]], na.rm = TRUE))
+            #     
+            #     ggplot(data, aes(x = date.y, y = value)) + 
+            #         geom_line()
+            # }
         })})
-    
-    
-    output$summary_table <- renderPrint({
-        req(input$submit_eda)    # Ensure that the submit button has been clicked
-        req(input$variable)       # Ensure that a variable has been selected
-        
-        data <- dataset_reactive()
-        variable <- data[[input$variable]] # Get the selected variable
-        summary_output <- summary(as.data.frame(variable)) # Get summary statistics
-        colnames(summary_output) <- input$variable # Set the selected variable as column name
-        
-        summary_output
-    })
     
     
     # Dynamic choro var options
@@ -168,6 +180,7 @@ function(input, output, session) {
     })
     
     
+    # Dynamic crime type options - global
     observe({
         data <- esda_dataset_reactive()
         crime_types <- unique(data$type)
@@ -189,6 +202,7 @@ function(input, output, session) {
     })
     
     
+    # Dynamic region options - local
     observe({
         data <- esda_dataset_reactive()
         regions <- unique(data$region)
@@ -199,6 +213,7 @@ function(input, output, session) {
     })
     
     
+    # Dynamic region options - global
     observe({
         data <- esda_dataset_reactive()
         regions <- unique(data$region)
@@ -248,6 +263,7 @@ function(input, output, session) {
     })
     
     
+    # Dyanmic time period options - local
     observe({
         data <- esda_dataset_reactive()
         
@@ -260,6 +276,8 @@ function(input, output, session) {
             selected = years[1])
     })
     
+    
+    # Dyanmic time period options - global
     observe({
         data <- esda_dataset_reactive()
         
@@ -273,6 +291,7 @@ function(input, output, session) {
     })
     
     
+    # Choloropleth output
     choropleth_map <- eventReactive(input$submit_esda,{
         req(input$esda_variable)
         req(input$esda_dataset)
@@ -311,7 +330,7 @@ function(input, output, session) {
         print('---------------------------------------------------------------')
         
         str(data)
-        # for debugging ---------------------------------------------------
+
         tmap_mode('view')
         tmap_options(check.and.fix = TRUE)
         tm_shape(data) +
@@ -324,12 +343,12 @@ function(input, output, session) {
             tm_layout(
                 main.title = paste(chosen_crime))
     })
-    
     output$choro_map <- renderTmap({
         choropleth_map()
     })
     
     
+    # Global Moran I - table
     globalMIResults <- eventReactive(input$submit_global,{
         chosen_crime <- input$global_crime_type
         chosen_region <- input$global_region
@@ -369,25 +388,6 @@ function(input, output, session) {
         
         return(global_moran_results)
     })
-    
-    
-    globalHist <- eventReactive(input$submit_global,{
-        global_moran_results <- globalMIResults()
-        
-        hist_plot <- hist(
-            global_moran_results$res,
-            freq=TRUE,
-            breaks=10,
-            xlab="Histogram of Simulated Moran's Is"
-        ) 
-        abline(v=0, col='red')
-    })
-    
-    output$global_hist <- renderPlot({
-        globalHist()
-    })
-    
-    
     output$global_output <- renderDataTable({
         
         data_display_options <- list(
@@ -405,10 +405,24 @@ function(input, output, session) {
     })
     
     
-    #==========================================================
-    # Local Measures of Spatial AutoCorrelation
-    #==========================================================
+    # Global Moran I - histogram
+    globalHist <- eventReactive(input$submit_global,{
+        global_moran_results <- globalMIResults()
+        
+        hist_plot <- hist(
+            global_moran_results$res,
+            freq=TRUE,
+            breaks=10,
+            xlab="Histogram of Simulated Moran's Is"
+        ) 
+        abline(v=0, col='red')
+    })
+    output$global_hist <- renderPlot({
+        globalHist()
+    })
     
+    
+    # LISA
     localMIResults <- eventReactive(input$MoranUpdate,{
         
         chosen_crime <- input$local_crime_type
@@ -465,14 +479,9 @@ function(input, output, session) {
         return(lisa)
     })
     
-    #==========================================================
-    # Render output maps
-    #==========================================================
-    
-    #Render local Moran I statistics
+    # LISA - statistical
     output$LocalMoranMap <- renderTmap({
         df <- localMIResults()
-        # df
         
         if(is.null(df) || nrow(df) == 0) return()  # Exit if no data
         
@@ -488,7 +497,7 @@ function(input, output, session) {
         localMI_map
     })
     
-    #Render LISA map
+    # LISA - the "presentable" one according to prof
     output$LISA <- renderTmap({
         df <- localMIResults()
         
