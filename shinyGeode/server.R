@@ -519,4 +519,37 @@ function(input, output, session) {
         
         lisamap
     })
+    
+    
+    # SKATER
+    skater_dataset_reactive <- reactive({
+        req(input$skater_dataset)
+        data <- switch(input$skater_dataset,
+            "crime_merged_sf" = crime_merged_sf)
+        data
+    })
+
+    source('skater_helper.R')
+    
+    observeEvent(input$run_skater,{
+        print('---------- start ----------')
+        data <- skater_dataset_reactive()
+        # glimpse(data)
+        selected_year <- 2023
+        selected_region <- 'Peninsular'
+
+        filtered_data <- prep_data(data, selected_year, selected_region)
+        # glimpse(filtered_data)
+        skater_clust <- run_skater(filtered_data, input$n_clusters)
+        # glimpse(skater_clust)
+        output$skater_plot <- renderTmap({
+            tmap_mode('plot')
+            map <- qtm(skater_clust, "Skater_CLUSTER") +
+                tm_borders(alpha = 0.5) +
+                tm_view(set.zoom.limits = c(6, 7))
+            map
+        })
+        print('---------- end ----------')
+    })
+    
 }

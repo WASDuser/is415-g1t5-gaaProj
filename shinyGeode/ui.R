@@ -265,4 +265,24 @@ navbarPage(
     navbarMenu('Clustering',
         tabPanel('hclust'),
         tabPanel('clustGEO'),
-        tabPanel('SKATER')))
+        tabPanel('SKATER',
+            sidebarLayout(
+                sidebarPanel(
+                    # Input: Select dataset
+                    selectInput("skater_dataset", "Choose Dataset:",
+                        choices = list("crime_merged_sf" = "crime_merged_sf")),
+                    
+                    # Input: Number of clusters for SKATER
+                    numericInput("n_clusters", "Number of Clusters (k):", value = 6, min = 2, max = 10),
+                    
+                    # Button to trigger SKATER clustering
+                    actionButton("run_skater", "Run SKATER")
+                ),
+                
+                mainPanel(
+                    # Output: Plot for SKATER results
+                    tmapOutput("skater_plot")
+                )
+            ))
+        )
+    )
