@@ -263,7 +263,104 @@ navbarPage(
     ),
     
     navbarMenu('Clustering',
-        tabPanel('hclust'),
+               tabPanel('hclust',
+                        sidebarLayout(
+                          
+                          
+                          sidebarPanel(
+                            
+                            
+                            selectInput(inputId = "region4",
+                                        label = "Region",
+                                        choices = list("Peninsular" = "Peninsular",
+                                                       "East" = "East"),
+                                        selected = "Peninsular"),
+                            
+                            
+                            selectInput(inputId = "year4",
+                                        label = "Year",
+                                        choices = list("2016" = "2016",
+                                                       "2017" = "2017",
+                                                       "2018" = "2018",
+                                                       "2019" = "2019",
+                                                       "2020" = "2020",
+                                                       "2021" = "2021",
+                                                       "2022" = "2022",
+                                                       "2023" = "2023"),
+                                        selected = "2020"),
+                            
+                            
+                            
+                            selectInput(inputId = "proxMethod",
+                                        label = "Proximity Method",
+                                        choices = list("Euclidean" = "euclidean",
+                                                       "Maximum" = "maximum",
+                                                       "Manhattan" = "manhattan",
+                                                       "Canberra" = "canberra",
+                                                       "Binary" = "binary",
+                                                       "Minkowski" = "minkowski"),
+                                        selected = "euclidean"),
+                            
+                            selectInput(inputId = "hclustMethod",
+                                        label = "Hclust Method",
+                                        choices = list(
+                                          "Ward's Minimum Variance (ward.D)" = "ward.D",
+                                          "Ward's Minimum Variance (ward.D2)" = "ward.D2",
+                                          "Single Linkage (single)" = "single",
+                                          "Complete Linkage (complete)" = "complete",
+                                          "Average Linkage (average)" = "average",
+                                          "McQuitty's Method (mcquitty)" = "mcquitty",
+                                          "Median Linkage (median)" = "median",
+                                          "Centroid Linkage (centroid)" = "centroid"
+                                        ),
+                                        selected = "ward.D"),
+                            
+                            sliderInput(inputId = "optimalClust", 
+                                        label = "Number of Clusters", 
+                                        min = 3, max = 15,
+                                        value = 6, step = 1),
+                            
+                            
+                            actionButton("HclustPlots", "Generate Plots"),
+                            hr(),
+                            
+                            
+                          ),
+                          
+                          
+                          mainPanel(
+                            
+                            tabsetPanel(id='tabs2',
+                                        
+                                        tabPanel("Hclust Dendogram", value = 'dendoTab',
+                                                 conditionalPanel(
+                                                   condition = "input.HclustPlots",
+                                                   plotOutput("dendogram"),
+                                                 )
+                                        ),
+                                        
+                                        tabPanel("Heatmap", value = 'heatmapTab',
+                                                 conditionalPanel(
+                                                   condition = "input.HclustPlots",
+                                                   plotlyOutput("heatmap"),
+                                                 )
+                                                 
+                                        ),
+                                        
+                                        tabPanel("Map", value = 'hcMapTab',
+                                                 # Placeholder content for the third map
+                                                 conditionalPanel(
+                                                   condition = "input.HclustPlots",
+                                                   tmapOutput("hclustMap"),
+                                                 )
+                                        ),
+                            )
+                            
+                          )
+                          
+                          
+                        )),
+               
         tabPanel('clustGEO'),
         tabPanel('SKATER',
             sidebarLayout(

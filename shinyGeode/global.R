@@ -9,3 +9,4 @@ pacman::p_load(sfdep, spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, Nb
 
 # Load datasets
 crime_merged_sf <- read_rds('data/crime_merged.rds')
+rate_crime_prep <- read_rds('data/rate_crime_prep.rds')

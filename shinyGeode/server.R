@@ -521,6 +521,135 @@ function(input, output, session) {
     })
     
     
+    
+    #========================#
+    ##### Render Hclust ######
+    #========================#
+    
+    dendogram <- eventReactive(input$HclustPlots,{
+      
+      print("button clicked, generating dendogram")
+      
+      rate_crime_data <- rate_crime_prep %>% 
+        filter(year == input$year4) %>% 
+        filter(region == input$region4)
+      
+      rate_crime_data <- as.data.frame(rate_crime_data)
+      row.names(rate_crime_data) <- rate_crime_data$district 
+      
+      rate_crime_data<- rate_crime_data %>% 
+        select(-c(2))
+      
+      rate_crime_data.std <- normalize(rate_crime_data)
+      
+      rate_crime_data_numeric <- rate_crime_data %>% select(where(is.numeric))
+      rate_crime_data_numeric <- rate_crime_data_numeric %>% drop_na() 
+      proxmat <- dist(rate_crime_data_numeric, method = "euclidean")
+      
+      
+      return(proxmat)
+      
+    })
+    
+    
+    output$dendogram <- renderPlot({
+      
+      prox <- dendogram()
+      
+      hclust_ward <- hclust(prox, method = input$hclustMethod)
+      plot(hclust_ward, cex = 0.7)
+      rect.hclust(hclust_ward, 
+                  k = input$optimalClust, 
+                  border = 2:5)
+      
+    })
+    
+    
+    heatmap<-eventReactive(input$HclustPlots,{
+      
+      print("button clicked, generating heatmap...")
+      
+      rate_crime_data <- rate_crime_prep %>% 
+        filter(year == input$year4) %>% 
+        filter(region == input$region4)
+      
+      rate_crime_data <- as.data.frame(rate_crime_data)
+      row.names(rate_crime_data) <- rate_crime_data$district 
+      
+      rate_crime_data<- rate_crime_data %>% 
+        select(-c(2))
+      
+      rate_crime_data.std <- normalize(rate_crime_data)
+      
+      return(rate_crime_data.std)
+      
+    })
+    
+    output$heatmap<- renderPlotly({
+      
+      rate_crime.std<- heatmap()
+      
+      map <- heatmaply(rate_crime_data.std,
+                       Colv=NA,
+                       dist_method = "euclidean",
+                       hclust_method = input$hclustMethod,
+                       seriate = "OLO",
+                       colors = Purples,
+                       k_row = input$optimalClust,
+                       margins = c(NA,200,60,NA),
+                       fontsize_row = 4,
+                       fontsize_col = 5,
+                       main="Geographic Segmentation of Malaysia by Crime Type",
+                       xlab = "Crime Type",
+                       ylab = "Districts"
+      )
+      map
+      
+    })
+    
+    
+    hclustMap<- eventReactive(input$HclustPlots, {
+      
+      
+      rate_crime_data <- rate_crime_prep %>% 
+        filter(year == input$year4) %>% 
+        filter(region == input$region4)
+      
+      rate_crime_data <- as.data.frame(rate_crime_data)
+      row.names(rate_crime_data) <- rate_crime_data$district 
+      
+      rate_crime_data<- rate_crime_data %>% 
+        select(-c(2))
+      
+      rate_crime_data.std <- normalize(rate_crime_data)
+      
+      rate_crime_data_numeric <- rate_crime_data %>% select(where(is.numeric))
+      rate_crime_data_numeric <- rate_crime_data_numeric %>% drop_na() 
+      proxmat <- dist(rate_crime_data_numeric, method = "euclidean")
+      
+      
+      hclust_ward <- hclust(proxmat, method = input$hclustMethod)
+      groups <- as.factor(cutree(hclust_ward, k=6))
+      
+      
+      rate_crime_cluster <- cbind(rate_crime_data, as.matrix(groups)) %>%
+        rename(`CLUSTER`=`as.matrix(groups)`)
+      
+      return(rate_crime_cluster)
+      
+    })
+    
+    
+    output$hclustMap<- renderTmap({
+      
+      rate_crime_cluster <- hclustMap()
+      rate_crime_cluster <- st_as_sf(rate_crime_cluster)
+      qtm(rate_crime_cluster, "CLUSTER")
+      
+    })
+    
+    
+    
     # SKATER
     skater_dataset_reactive <- reactive({
         req(input$skater_dataset)
