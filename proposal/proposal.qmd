@@ -6,13 +6,13 @@ date-modified: "last-modified"
 ---
 
 ::: {style="font-size:40px"}
-**ShinyGeode**
+**Geo-PEACE**
 :::
 
 ------------------------------------------------------------------------
 
 ::: {style="font-size:30px"}
-**Theme: Spatial Point Patterns Analysis/Exploratory Spatial Data Analysis**
+**Theme: Exploratory Spatial Data Analysis/Analytical Regionalisation and Geographical Segmentation**
 :::
 
 ------------------------------------------------------------------------
@@ -27,18 +27,18 @@ Our project aims to raise awareness about the crimes and safety issues in Malays
 
 # Project Objectives
 
--   Visualise the Crime events on a map of the study area
+-   Visualise the crime rates of different crime types by districts, on a map of Peninsular and East Malaysian Regions
 
 -   Figure out if there are any patterns relating the crime type and the spatial units in the study area
 
--   Identify the crime rates hotspots and clusters
+-   Identify the crime rate hotspots and clusters
 
 ------------------------------------------------------------------------
 
 # Datasets
 
 -   [Crime Rates working data](https://data.gov.my/data-catalogue/crime_district): Aspatial Data that covers specifics of the crimes committed in the various states.
--   [Shapefile (Administrative level 0-2)](https://data.humdata.org/dataset/cod-ab-mys?): Shapefile that contains the admin boundaries of Malaysia
+-   [Shapefile (Administrative level 0-2)](https://data.humdata.org/dataset/cod-ab-mys?): Shapefile that contains the district boundaries of Malaysia
 
 ------------------------------------------------------------------------
 
@@ -82,13 +82,9 @@ Our project aims to raise awareness about the crimes and safety issues in Malays
     2.  Data Wrangling
         -   Processing imported data to keep only needed information
 
-        -   Restricting study area
-
         -   Handling missing/duplicated data
 
-        -   Cleaning up of data
-
-        -   Examine data to identify patterns
+        -   Cleaning and standardising data
 
         -   Joining of boundary and working data
 
@@ -96,13 +92,17 @@ Our project aims to raise awareness about the crimes and safety issues in Malays
 
 -   **Exploratory Data Analysis (EDA)**
 
-    1.  Visualising graphs/maps of Crime Rates in various categories
-    2.  Reveal the spatial distribution of crimes in the study area
+    1.  Plotting a barchart to observe for the number of crimes by districts to gain insights into more crime-prone regions on Malaysia.
+    2.  Plotting choropleth maps to reflect the spatial distribution of crimes in Malaysia
 
 -   **Global and Local Spatial Autocorrelation**
 
-    1.  Global: Make use of measures such as Moran I's, Geary C's to determine if the spatial patterns of the crime events are clustered or are randomly distributed
+    1.  Global: Make use of measures such as Moran I's to determine if the spatial patterns of the crime events are clustered, randomly distributed, or show a pattern of dispersion.
     2.  Local: Make use of measures such as Local Moran I's and Getis-Ord Gi\* statistic to identify cold and/or hotspot areas for crime events in our study area.
+
+-   **Clustering Analysis**
+
+    1.  Deploy various methods of geographical segmentation, like Hierarchical Clustering, SKATER Approach and ClustGeo to observe for any natural clustering of spatial units based on the crime rates.
 
 -   **Mapping our results and Interpretation**
 
