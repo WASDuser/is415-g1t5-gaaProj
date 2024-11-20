@@ -529,6 +529,14 @@ function(input, output, session) {
         data
     })
 
+    # Dyanmic methods - SKATER
+    observe({
+        dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
+        updateSelectInput(session, 'skater_method',
+            choices = dist_methods,
+            selected = dist_methods[1])
+    })
+    
     source('skater_helper.R')
     
     observeEvent(input$run_skater,{
@@ -540,7 +548,7 @@ function(input, output, session) {
 
         filtered_data <- prep_data(data, selected_year, selected_region)
         # glimpse(filtered_data)
-        skater_clust <- run_skater(filtered_data, input$n_clusters)
+        skater_clust <- run_skater(filtered_data, input$skater_method, input$n_clusters)
         # glimpse(skater_clust)
         output$skater_plot <- renderTmap({
             tmap_mode('plot')

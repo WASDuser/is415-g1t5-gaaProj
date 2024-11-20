@@ -9,7 +9,7 @@ prep_data <- function(data, yr, reg){
     return(filtered_data)
 }
 
-run_skater <- function(data, n_clusters){
+run_skater <- function(data, meth, n_clusters){
     attribute_data <- data %>% 
         select(crimes, crime_rate) %>% 
         st_drop_geometry()
@@ -51,9 +51,9 @@ run_skater <- function(data, n_clusters){
     mst <- mstree(w)
     clustN <- spdep::skater(edges = mst[, 1:2],
       data = attribute_data,
-      method = "euclidean",
-      ncuts = 5)
-    
+      method = meth,
+      ncuts = n_clusters - 1)
+
     groups_mat <- as.matrix(clustN$groups)
     skater_cluster <- cbind(sf_cluster, as.factor(groups_mat)) %>%
       rename(`Skater_CLUSTER` = `as.factor.groups_mat.`)

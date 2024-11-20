@@ -272,6 +272,11 @@ navbarPage(
                     selectInput("skater_dataset", "Choose Dataset:",
                         choices = list("crime_merged_sf" = "crime_merged_sf")),
                     
+                    # Input: Select distance method
+                    selectInput("skater_method", "Choose distance method:",
+                        choices = NULL,
+                        selected = NULL),
+                    
                     # Input: Number of clusters for SKATER
                     numericInput("n_clusters", "Number of Clusters (k):", value = 6, min = 2, max = 10),
                     
