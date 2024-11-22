@@ -9,7 +9,7 @@
 <meta name="author" content="William Tan Juin Wei, Marcus Jaeson Yeo, Santhya Thirumarai Selvan">
 <meta name="dcterms.date" content="2024-10-01">
 
-<title>Project Proposal – is415-g1t5-project</title>
+<title>Crime Spots: Uncovering Clusters in Malaysia – is415-g1t5-project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,6 +103,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -128,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#project-motivation" id="toc-project-motivation" class="nav-link active" data-scroll-target="#project-motivation">Project Motivation</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
   <li><a href="#project-objectives" id="toc-project-objectives" class="nav-link" data-scroll-target="#project-objectives">Project Objectives</a></li>
   <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
   <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature Review</a></li>
@@ -143,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project Proposal</h1>
+<h1 class="title">Crime Spots: Uncovering Clusters in Malaysia</h1>
 </div>
 
 
@@ -167,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 26, 2024</p>
+      <p class="date-modified">November 22, 2024</p>
     </div>
   </div>
     
@@ -179,25 +242,26 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div style="font-size:40px">
-<p><strong>ShinyGeode</strong></p>
+<p><strong>Geo-PEACE</strong></p>
 </div>
 <hr>
-<div style="font-size:30px">
-<p><strong>Theme: Spatial Point Patterns Analysis/Exploratory Spatial Data Analysis</strong></p>
-</div>
-<hr>
-<section id="project-motivation" class="level1">
-<h1>Project Motivation</h1>
-<p>Singaporeans take their home’s low crime rate for granted, often bringing that mindset along when they visit other countries. One of the most popular getaway destinations for us is our neighbour, Malaysia, given the multiple factors of convenience like proximity and the relatively lower cost. However, it will not be wise to assume the same level of safety as we have in Singapore.</p>
-<p>Our project aims to raise awareness about the crimes and safety issues in Malaysia, so that tourists can manage travel risk for their destinations. Spatial Point Pattern Analysis can aid in providing useful insights on the distribution of crime in Malaysia. Exploratory Data Analysis can be utilised to identify hotspots or cold spot areas for crimes of different types, providing travellers with more concrete information when deciding which states to travel to.</p>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>Singaporeans often take their homeland’s low crime rate for granted, carrying this perception when traveling abroad. Malaysia, a popular destination due to its proximity and affordability, offers many conveniences. However, assuming the same level of safety as in Singapore can lead to unwise decisions.</p>
+<p>This project seeks to enhance awareness of crime and safety issues in Malaysia, helping tourists better assess travel risks. We are employing techniques such as <strong>Exploratory Data Analysis</strong> <strong>(EDA)</strong>, <strong>Spatial Weights Analysis (SWA)</strong> and various <strong>Clustering</strong> <strong>Analyses</strong>, to identify trends crime hotspots and cold spots. This project aims to offer travelers more informed guidance when selecting destinations within Malaysia.</p>
 <hr>
 </section>
 <section id="project-objectives" class="level1">
 <h1>Project Objectives</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/clipboard-1546550371.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="100"></p>
+</figure>
+</div>
 <ul>
-<li><p>Visualise the Crime events on a map of the study area</p></li>
-<li><p>Figure out if there are any patterns relating the crime type and the spatial units in the study area</p></li>
-<li><p>Identify the crime rates hotspots and clusters</p></li>
+<li><p><strong>Visualisation</strong>: Develop highly-readable maps and plots to explore spatial trends related to crime and its sub-types within the study area</p></li>
+<li><p><strong>Clustering</strong>: Implement hierarchical clustering, ClustGeo and SKATER clustering analyses to investigate spatial distribution of crime in Malaysia</p></li>
+<li><p><strong>Interactivity</strong>: Enable dynamic selection of parameters (year, region, clustering settings, etc.) and other user-friendly feature using Shiny</p></li>
 </ul>
 <hr>
 </section>
@@ -205,7 +269,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>Datasets</h1>
 <ul>
 <li><a href="https://data.gov.my/data-catalogue/crime_district">Crime Rates working data</a>: Aspatial Data that covers specifics of the crimes committed in the various states.</li>
-<li><a href="https://data.humdata.org/dataset/cod-ab-mys?">Shapefile (Administrative level 0-2)</a>: Shapefile that contains the admin boundaries of Malaysia</li>
+<li><a href="https://data.humdata.org/dataset/cod-ab-mys?">Shapefile (Administrative level 0-2)</a>: Shapefile that contains the district boundaries of Malaysia</li>
 </ul>
 <hr>
 </section>
@@ -241,31 +305,54 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="approach-and-methodology" class="level1">
 <h1>Approach and Methodology</h1>
+<p>The approach centers on the <strong>district-level</strong> analysis of both regions of Malaysia, East and West (Peninsular) Malaysia. The project begins with data wrangling to resolve discrepancies between the datasets, followed by EDA to understand the big picture of crime distribution in Peninsular and East Malaysia. Additionall, deriving crime <strong>rate</strong> figures rather than using crime absolute crime figures provided in the crime dataset helps</p>
+<p>Key details include:</p>
 <ul>
-<li><p><strong>Data Preparation</strong></p>
-<ol type="1">
-<li>Sourcing data and Importing data</li>
-<li>Data Wrangling
-<ul>
-<li><p>Processing imported data to keep only needed information</p></li>
-<li><p>Restricting study area</p></li>
-<li><p>Handling missing/duplicated data</p></li>
-<li><p>Cleaning up of data</p></li>
-<li><p>Examine data to identify patterns</p></li>
-<li><p>Joining of boundary and working data</p></li>
-<li><p>Perform a write and read to rds for easier access to variable</p></li>
-</ul></li>
-</ol></li>
 <li><p><strong>Exploratory Data Analysis (EDA)</strong></p>
-<ol type="1">
-<li>Visualising graphs/maps of Crime Rates in various categories</li>
-<li>Reveal the spatial distribution of crimes in the study area</li>
-</ol></li>
-<li><p><strong>Global and Local Spatial Autocorrelation</strong></p>
-<ol type="1">
-<li>Global: Make use of measures such as Moran I’s, Geary C’s to determine if the spatial patterns of the crime events are clustered or are randomly distributed</li>
+<ul>
+<li><p>Barchart, Box-plots, Histograms</p></li>
+<li><p>Plotting choropleth maps to reflect the spatial distribution of crimes in Malaysia</p></li>
+</ul></li>
+<li><p><strong>Crime rate calculation</strong></p></li>
+</ul>
+<p><strong>Crime rate</strong> <span class="math inline">\(R_{i,t,c}\)</span> for district <span class="math inline">\(i\)</span> year <span class="math inline">\(t\)</span>, and crime type <span class="math inline">\(c\)</span> is then computed as the proportion of crimes of type <span class="math inline">\(c\)</span> in district <span class="math inline">\(i\)</span> relative to the total crimes in the same district and year, expressed as a percentage:</p>
+<p><span class="math display">\[
+\text{R}_{i,t,c} = \left( \frac{\text{crimes}_{i,t,c}}{\text{total_crimes_year}_{i,t}} \right) \times 100
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><p><span class="math inline">\(R_{i,t,c}\)</span> is the crime rate for district <span class="math inline">\(i\)</span>, year <span class="math inline">\(t\)</span>, and crime type <span class="math inline">\(c\)</span>,</p></li>
+<li><p><span class="math inline">\(\text{crimes}_{i,t,c}\)</span> <em>is the number of crimes of type</em> <span class="math inline">\(c\)</span> <em>in district</em> <span class="math inline">\(i\)</span> <em>in year</em> <span class="math inline">\(t\)</span><em>,</em></p></li>
+<li><p><span class="math inline">\(\text{total_crimes_year}_{i,t}\)</span> is the total number of crimes in district <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>, computed as the sum of all crimes across types for that district and year.</p></li>
+</ul>
+<p>Thus, each crime rate figure corresponds to the proportion of a specific crime type relative to the total crimes reported in that district for the given year.</p>
+<p>In practice, the crime rate for each district and year is calculated using the following R code:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crime_merged <span class="ot">&lt;-</span> crime_merged <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(date.y), <span class="st">"%Y"</span>)), <span class="at">.before=</span> <span class="dv">11</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate crime rate</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>crime_merged <span class="ot">&lt;-</span> crime_merged <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ADM1_EN, ADM2_EN, year) <span class="sc">%&gt;%</span>                 <span class="co"># Group by district and year</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_crimes_year =</span> <span class="fu">sum</span>(crimes),     <span class="co"># Calculate total crimes per district per year</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">crime_rate =</span> (crimes <span class="sc">/</span> total_crimes_year) <span class="sc">*</span> <span class="dv">100</span>, <span class="at">.before=</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span>  <span class="co"># Calculate crime rate for each row</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>total_crimes_year) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (<span class="sc">-</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li><p><strong>Global and Local Spatial Autocorrelation (SWA)</strong></p>
+<ul>
+<li>Global: Make use of measures such as Moran I’s to determine if the spatial patterns of the crime events are clustered, randomly distributed, or show a pattern of dispersion.</li>
 <li>Local: Make use of measures such as Local Moran I’s and Getis-Ord Gi* statistic to identify cold and/or hotspot areas for crime events in our study area.</li>
-</ol></li>
+</ul></li>
+<li><p><strong>Clustering Analysis</strong></p>
+<ul>
+<li>Deploy Hierarchical Clustering, SKATER Approach and ClustGeo to observe for any natural clustering of spatial units based on the crime rates.</li>
+</ul></li>
 <li><p><strong>Mapping our results and Interpretation</strong></p></li>
 <li><p><strong>Conclusion</strong></p></li>
 </ul>
