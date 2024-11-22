@@ -290,7 +290,6 @@ navbarPage(
                                         selected = "2020"),
                             
                             
-                            
                             selectInput(inputId = "proxMethod",
                                         label = "Proximity Method",
                                         choices = list("Euclidean" = "euclidean",
@@ -348,7 +347,6 @@ navbarPage(
                                         ),
                                         
                                         tabPanel("Map", value = 'hcMapTab',
-                                                 # Placeholder content for the third map
                                                  conditionalPanel(
                                                    condition = "input.HclustPlots",
                                                    tmapOutput("hclustMap"),
