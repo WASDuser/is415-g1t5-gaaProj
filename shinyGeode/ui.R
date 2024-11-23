@@ -8,13 +8,13 @@ navbarPage(
     tabPanel('Data',
         sidebarLayout(
             sidebarPanel(
-                selectInput("dataset", "Choose Dataset:",
-                    choices = list(
-                        "crime_merged_sf" = "crime_merged_sf"
-                    )),
+                # selectInput("dataset", "Choose Dataset:",
+                #     choices = list(
+                #         "crime_merged_sf" = "crime_merged_sf"
+                #     )),
                 
                 
-                radioButtons("display_option", "Display:",
+                radioButtons("display_option", "Display options for working dataset (crime_merged_sf):",
                     choices = list(
                         "Preview" = "preview",
                         "str()" = "str",
@@ -30,7 +30,7 @@ navbarPage(
                     verbatimTextOutput("code_output")
                 ),
                 tags$br(),
-                textOutput("description_text"),
+                uiOutput("description_text"),
                 tags$br(),
                 tableOutput("summary_stats"),
             )
@@ -41,10 +41,10 @@ navbarPage(
     tabPanel('EDA',
         sidebarLayout(
             sidebarPanel(
-                selectInput("esda_dataset", "Choose Dataset:",
-                    choices = list(
-                        "crime_merged_sf" = "crime_merged_sf"
-                    )),
+                # selectInput("esda_dataset", "Choose Dataset:",
+                #     choices = list(
+                #         "crime_merged_sf" = "crime_merged_sf"
+                #     )),
                 
                 selectInput("var_type", "Variable Type:",
                     choices = list(

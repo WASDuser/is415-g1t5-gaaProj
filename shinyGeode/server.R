@@ -1,6 +1,8 @@
+source("descriptions.R")
+source('skater_helper.R')
+
 function(input, output, session) {
-    
-    
+    # ------------------------------ DATA ------------------------------
     dataset_reactive <- reactive({
         req(input$dataset)
         data <- switch(input$dataset,
@@ -21,7 +23,7 @@ function(input, output, session) {
     output$data_table <- DT::renderDataTable({
         req(input$display_option == "preview")
         
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         data_display_options <- list( # default display
             dom = 'Bfrtip',
@@ -41,7 +43,7 @@ function(input, output, session) {
     
     # Render code output for str() or glimpse()
     output$code_output <- renderPrint({
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         if (input$display_option == "str") {
             str(data)
@@ -51,18 +53,18 @@ function(input, output, session) {
     })
     
     
-    # Dynamic description based on the dataset
+    # description based on the dataset
     output$description_text <- renderText({
-        switch(input$dataset,
-            "crime_merged_sf" = "Description for crime_merged_sf"
-        )
+      description_text <- descriptions[['data_desc']]
+      HTML(description_text)
     })
     
+    # ------------------------------ END OF DATA ------------------------------
     
+    # ------------------------------ EDA ------------------------------
     # Update variable choices based on selected dataset
     observe({
-        req(input$dataset)
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         # Get numeric variable names
         numeric_vars <- names(data)[sapply(data, is.numeric)]
@@ -75,7 +77,7 @@ function(input, output, session) {
     
     # Dynamic UI for variable selection based on continuous/categorical
     output$var_select <- renderUI({
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         if (input$var_type == "cat") {
             selectInput("variable", "Choose Categorical Variable:", 
                 choices = names(data)[sapply(data, is.character)])
@@ -91,7 +93,7 @@ function(input, output, session) {
         req(input$submit_eda)    # Ensure that the submit button has been clicked
         req(input$variable)       # Ensure that a variable has been selected
         
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         variable <- data[[input$variable]] # Get the selected variable
         summary_output <- summary(as.data.frame(variable)) # Get summary statistics
         colnames(summary_output) <- input$variable # Set the selected variable as column name
@@ -117,7 +119,7 @@ function(input, output, session) {
     observeEvent(input$submit_eda, {
         req(input$submit_eda)
         output$eda_plot <- renderPlot({
-            data <- dataset_reactive()
+            data <- crime_merged_sf
             
             color <- "#428bca"
             
@@ -145,6 +147,7 @@ function(input, output, session) {
             # }
         })})
     
+    # ------------------------------ END OF EDA ------------------------------
     
     # Dynamic choro var options
     observe({
@@ -686,8 +689,6 @@ function(input, output, session) {
             choices = dist_methods,
             selected = dist_methods[1])
     })
-    
-    source('skater_helper.R')
     
     observeEvent(input$run_skater,{
         print('---------- start ----------')
