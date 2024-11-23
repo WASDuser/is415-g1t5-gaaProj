@@ -377,6 +377,13 @@ navbarPage(
                     # Input: Select dataset
                     # selectInput("skater_dataset", "Choose Dataset:",
                     #     choices = list("crime_merged_sf" = "crime_merged_sf")),
+                    selectInput("skater_region", "Select region:",
+                        choices = NULL,
+                        selected = NULL),
+                    
+                    selectInput("skater_time_period", "Select year:",
+                        choices = NULL,
+                        selected = NULL),
                     
                     # Input: Select distance method
                     selectInput("skater_method", "Choose distance method:",

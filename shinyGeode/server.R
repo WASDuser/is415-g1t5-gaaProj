@@ -375,10 +375,6 @@ function(input, output, session) {
             # missing data if any
             filter(!is.na(crime_rate))
         
-        if ("date.y" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.y) == chosen_year)
-        } else{data <- data %>% filter(year(data$date) == chosen_year)}
-        
         nb <- st_contiguity(data$geometry, queen = as.logical(input$global_contiguity))
         
         # thanks to santhya~
@@ -706,6 +702,29 @@ function(input, output, session) {
             "crime_merged_sf" = crime_merged_sf)
         data
     })
+    
+    # Dyanmic time period options - skater
+    observe({
+      data <- crime_merged_sf
+      
+      if ("date.y" %in% colnames(data)){ # hardcode
+        years <- unique(year(data$date.y))
+      } else{years <- unique(year(data$date))}
+      
+      updateSelectInput(session, 'skater_time_period',
+        choices = years,
+        selected = years[1])
+    })
+    
+    # Dynamic region options - skater
+    observe({
+      data <- crime_merged_sf
+      regions <- unique(data$region)
+      
+      updateSelectInput(session, "skater_region",
+        choices = regions,
+        selected = regions[1])
+    })
 
     # Dyanmic methods - SKATER
     observe({
@@ -719,8 +738,8 @@ function(input, output, session) {
         print('---------- start ----------')
         data <- crime_merged_sf
         # glimpse(data)
-        selected_year <- 2023
-        selected_region <- 'Peninsular'
+        selected_year <- input$skater_time_period
+        selected_region <- input$skater_region
 
         filtered_data <- prep_data(data, selected_year, selected_region)
         # glimpse(filtered_data)
