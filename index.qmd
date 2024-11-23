@@ -2,7 +2,7 @@
 
 ![]()
 
-# ![](images/Untitled design.jpg)
+![](images/Untitled design.jpg)
 
 ::: {style="text-align: center;"}
 # IS415 G1T5- Geo-PEACE
