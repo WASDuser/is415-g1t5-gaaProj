@@ -1,6 +1,8 @@
+source("descriptions.R")
+source('skater_helper.R')
+
 function(input, output, session) {
-    
-    
+    # ------------------------------ DATA ------------------------------
     dataset_reactive <- reactive({
         req(input$dataset)
         data <- switch(input$dataset,
@@ -21,7 +23,7 @@ function(input, output, session) {
     output$data_table <- DT::renderDataTable({
         req(input$display_option == "preview")
         
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         data_display_options <- list( # default display
             dom = 'Bfrtip',
@@ -41,7 +43,7 @@ function(input, output, session) {
     
     # Render code output for str() or glimpse()
     output$code_output <- renderPrint({
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         if (input$display_option == "str") {
             str(data)
@@ -51,18 +53,18 @@ function(input, output, session) {
     })
     
     
-    # Dynamic description based on the dataset
-    output$description_text <- renderText({
-        switch(input$dataset,
-            "crime_merged_sf" = "Description for crime_merged_sf"
-        )
+    # description based on the dataset
+    output$data_desc <- renderText({
+      description_text <- descriptions[['data_desc']]
+      HTML(description_text)
     })
     
+    # ------------------------------ END OF DATA ------------------------------
     
+    # ------------------------------ EDA ------------------------------
     # Update variable choices based on selected dataset
     observe({
-        req(input$dataset)
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         
         # Get numeric variable names
         numeric_vars <- names(data)[sapply(data, is.numeric)]
@@ -75,7 +77,7 @@ function(input, output, session) {
     
     # Dynamic UI for variable selection based on continuous/categorical
     output$var_select <- renderUI({
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         if (input$var_type == "cat") {
             selectInput("variable", "Choose Categorical Variable:", 
                 choices = names(data)[sapply(data, is.character)])
@@ -91,7 +93,7 @@ function(input, output, session) {
         req(input$submit_eda)    # Ensure that the submit button has been clicked
         req(input$variable)       # Ensure that a variable has been selected
         
-        data <- dataset_reactive()
+        data <- crime_merged_sf
         variable <- data[[input$variable]] # Get the selected variable
         summary_output <- summary(as.data.frame(variable)) # Get summary statistics
         colnames(summary_output) <- input$variable # Set the selected variable as column name
@@ -117,7 +119,7 @@ function(input, output, session) {
     observeEvent(input$submit_eda, {
         req(input$submit_eda)
         output$eda_plot <- renderPlot({
-            data <- dataset_reactive()
+            data <- crime_merged_sf
             
             color <- "#428bca"
             
@@ -146,9 +148,79 @@ function(input, output, session) {
         })})
     
     
+    # description
+    output$eda_desc <- renderText({
+      description_text <- descriptions[['eda_desc']]
+      HTML(description_text)
+    })
+    
+    # ------------------------------ END OF EDA ------------------------------
+    
+    # Choloropleth output
+    choropleth_map <- eventReactive(input$submit_esda,{
+      req(input$esda_variable)
+      req(input$crime_type)
+      req(input$region)
+      req(input$classification)
+      req(input$n_classes)
+      req(input$colors)
+      
+      chosen_data <- crime_merged_sf
+      chosen_var <- input$esda_variable
+      chosen_crime <- input$crime_type
+      chosen_region <- input$region
+      chosen_class <- input$classification
+      chosen_n <- input$n_classes
+      chosen_color <- input$colors
+      
+      data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>%
+        filter(region == chosen_region) %>% 
+        filter(type == chosen_crime)
+      
+      # for debugging ---------------------------------------------------
+      print(chosen_data)
+      print('---------------------------------------------------------------')
+      print(chosen_var)
+      print('---------------------------------------------------------------')
+      print(chosen_crime)
+      print('---------------------------------------------------------------')
+      print(chosen_region)
+      print('---------------------------------------------------------------')
+      print(chosen_class)
+      print('---------------------------------------------------------------')
+      print(chosen_n)
+      print('---------------------------------------------------------------')
+      print(chosen_color)
+      print('---------------------------------------------------------------')
+      
+      str(data)
+      
+      tmap_mode('view')
+      tmap_options(check.and.fix = TRUE)
+      tm_shape(data) +
+        tm_fill(
+          col = chosen_var,
+          palette = chosen_color,
+          style = chosen_class,
+          n = chosen_n,
+        ) +
+        tm_layout(
+          main.title = paste(chosen_crime))
+    })
+    output$choro_map <- renderTmap({
+      choropleth_map()
+    })
+    
+    
+    # Choropleth desc
+    output$choropleth_desc <- renderText({
+      description_text <- descriptions[['choropleth_desc']]
+      HTML(description_text)
+    })
+    
     # Dynamic choro var options
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         numeric_cols <- names(data)[sapply(data, is.numeric)]
         
         updateSelectInput(session, "esda_variable", 
@@ -160,7 +232,7 @@ function(input, output, session) {
     
     # Dynamic crime type options
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         crime_types <- unique(data$type)
         
         updateSelectInput(session, "crime_type",
@@ -169,9 +241,26 @@ function(input, output, session) {
     })
     
     
+    # Dynamic colors
+    observe({
+      c_palette <- list(
+        "blues" = "Blues", 
+        "reds" = "Reds", 
+        "greens" = "Greens",
+        "Yellow-Orange-Red" = "YlOrRd",
+        "Yellow-Orange-Brown" = "YlOrBr",
+        "Yellow-Green" = "YlGn",
+        "Orange-Red" = "OrRd")
+      
+      updateSelectInput(session, 'colors',
+        choices = c_palette,
+        selected = c_palette[1])
+    })
+    
+    
     # Dynamic crime type options - local
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         crime_types <- unique(data$type)
         
         updateSelectInput(session, "local_crime_type",
@@ -182,7 +271,7 @@ function(input, output, session) {
     
     # Dynamic crime type options - global
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         crime_types <- unique(data$type)
         
         updateSelectInput(session, "global_crime_type",
@@ -193,7 +282,7 @@ function(input, output, session) {
     
     # Dynamic region options
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         regions <- unique(data$region)
         
         updateSelectInput(session, "region",
@@ -204,7 +293,7 @@ function(input, output, session) {
     
     # Dynamic region options - local
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         regions <- unique(data$region)
         
         updateSelectInput(session, "local_region",
@@ -215,7 +304,7 @@ function(input, output, session) {
     
     # Dynamic region options - global
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         regions <- unique(data$region)
         
         updateSelectInput(session, "global_region",
@@ -246,29 +335,12 @@ function(input, output, session) {
     })
     
     
-    # Dynamic colors
-    observe({
-        c_palette <- list(
-            "blues" = "Blues", 
-            "reds" = "Reds", 
-            "greens" = "Greens",
-            "Yellow-Orange-Red" = "YlOrRd",
-            "Yellow-Orange-Brown" = "YlOrBr",
-            "Yellow-Green" = "YlGn",
-            "Orange-Red" = "OrRd")
-        
-        updateSelectInput(session, 'colors',
-            choices = c_palette,
-            selected = c_palette[1])
-    })
-    
-    
     # Dyanmic time period options - local
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.x))
+        if ("date.y" %in% colnames(data)){ # hardcode
+            years <- unique(year(data$date.y))
         } else{years <- unique(year(data$date))}
         
         updateSelectInput(session, 'local_time_period',
@@ -279,72 +351,15 @@ function(input, output, session) {
     
     # Dyanmic time period options - global
     observe({
-        data <- esda_dataset_reactive()
+        data <- crime_merged_sf
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.x))
+        if ("date.y" %in% colnames(data)){ # hardcode
+            years <- unique(year(data$date.y))
         } else{years <- unique(year(data$date))}
         
         updateSelectInput(session, 'global_time_period',
             choices = years,
             selected = years[1])
-    })
-    
-    
-    # Choloropleth output
-    choropleth_map <- eventReactive(input$submit_esda,{
-        req(input$esda_variable)
-        req(input$esda_dataset)
-        req(input$crime_type)
-        req(input$region)
-        req(input$classification)
-        req(input$n_classes)
-        req(input$colors)
-        
-        chosen_data <- input$esda_dataset
-        chosen_var <- input$esda_variable
-        chosen_crime <- input$crime_type
-        chosen_region <- input$region
-        chosen_class <- input$classification
-        chosen_n <- input$n_classes
-        chosen_color <- input$colors
-        
-        data <- esda_dataset_reactive() %>% ungroup() %>% st_as_sf() %>%
-            filter(region == chosen_region) %>% 
-            filter(type == chosen_crime)
-        
-        # for debugging ---------------------------------------------------
-        print(chosen_data)
-        print('---------------------------------------------------------------')
-        print(chosen_var)
-        print('---------------------------------------------------------------')
-        print(chosen_crime)
-        print('---------------------------------------------------------------')
-        print(chosen_region)
-        print('---------------------------------------------------------------')
-        print(chosen_class)
-        print('---------------------------------------------------------------')
-        print(chosen_n)
-        print('---------------------------------------------------------------')
-        print(chosen_color)
-        print('---------------------------------------------------------------')
-        
-        str(data)
-
-        tmap_mode('view')
-        tmap_options(check.and.fix = TRUE)
-        tm_shape(data) +
-            tm_fill(
-                col = chosen_var,
-                palette = chosen_color,
-                style = chosen_class,
-                n = chosen_n,
-            ) +
-            tm_layout(
-                main.title = paste(chosen_crime))
-    })
-    output$choro_map <- renderTmap({
-        choropleth_map()
     })
     
     
@@ -354,15 +369,11 @@ function(input, output, session) {
         chosen_region <- input$global_region
         chosen_year <- input$global_time_period
         
-        data <- esda_dataset_reactive() %>% ungroup() %>% st_as_sf() %>% 
+        data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>% 
             filter(region == chosen_region) %>% 
             filter(type == chosen_crime) %>% 
             # missing data if any
             filter(!is.na(crime_rate))
-        
-        if ("date.x" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.x) == chosen_year)
-        } else{data <- data %>% filter(year(data$date) == chosen_year)}
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$global_contiguity))
         
@@ -420,6 +431,11 @@ function(input, output, session) {
     output$global_hist <- renderPlot({
         globalHist()
     })
+    # global desc
+    output$global_desc <- renderText({
+      description_text <- descriptions[['global_desc']]
+      HTML(description_text)
+    })
     
     
     # LISA
@@ -429,14 +445,14 @@ function(input, output, session) {
         chosen_region <- input$local_region
         chosen_year <- input$local_time_period
         
-        data <- esda_dataset_reactive() %>% ungroup() %>% st_as_sf() %>% 
+        data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>% 
             filter(region == chosen_region) %>% 
             filter(type == chosen_crime) %>% 
             # missing data if any
             filter(!is.na(crime_rate))
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.x) == chosen_year)
+        if ("date.y" %in% colnames(data)){ # hardcode
+            data <- data %>% filter(year(data$date.y) == chosen_year)
         } else{data <- data %>% filter(year(data$date) == chosen_year)}
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$Contiguity))
@@ -520,7 +536,11 @@ function(input, output, session) {
         lisamap
     })
     
-    
+    # local desc
+    output$local_desc <- renderText({
+      description_text <- descriptions[['local_desc']]
+      HTML(description_text)
+    })
     
     #========================#
     ##### Render Hclust ######
@@ -668,7 +688,11 @@ function(input, output, session) {
       qtm(rate_crime_cluster, "CLUSTER")
     })
     
-    
+    # hclust desc
+    output$hclust_desc <- renderText({
+      description_text <- descriptions[['hclust_desc']]
+      HTML(description_text)
+    })
     #ClustGeo
     clustGeo_dataset_reactive <- reactive({
       req(input$clustGeo_dataset)
@@ -761,6 +785,29 @@ function(input, output, session) {
             "crime_merged_sf" = crime_merged_sf)
         data
     })
+    
+    # Dyanmic time period options - skater
+    observe({
+      data <- crime_merged_sf
+      
+      if ("date.y" %in% colnames(data)){ # hardcode
+        years <- unique(year(data$date.y))
+      } else{years <- unique(year(data$date))}
+      
+      updateSelectInput(session, 'skater_time_period',
+        choices = years,
+        selected = years[1])
+    })
+    
+    # Dynamic region options - skater
+    observe({
+      data <- crime_merged_sf
+      regions <- unique(data$region)
+      
+      updateSelectInput(session, "skater_region",
+        choices = regions,
+        selected = regions[1])
+    })
 
     # Dyanmic methods - SKATER
     observe({
@@ -770,14 +817,12 @@ function(input, output, session) {
             selected = dist_methods[1])
     })
     
-    source('skater_helper.R')
-    
     observeEvent(input$run_skater,{
         print('---------- start ----------')
-        data <- skater_dataset_reactive()
+        data <- crime_merged_sf
         # glimpse(data)
-        selected_year <- 2023
-        selected_region <- 'Peninsular'
+        selected_year <- input$skater_time_period
+        selected_region <- input$skater_region
 
         filtered_data <- prep_data(data, selected_year, selected_region)
         # glimpse(filtered_data)
@@ -791,6 +836,12 @@ function(input, output, session) {
             map
         })
         print('---------- end ----------')
+    })
+    
+    # skater desc
+    output$skater_desc <- renderText({
+      description_text <- descriptions[['skater_desc']]
+      HTML(description_text)
     })
     
 }
