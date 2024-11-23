@@ -156,6 +156,68 @@ function(input, output, session) {
     
     # ------------------------------ END OF EDA ------------------------------
     
+    # Choloropleth output
+    choropleth_map <- eventReactive(input$submit_esda,{
+      req(input$esda_variable)
+      req(input$crime_type)
+      req(input$region)
+      req(input$classification)
+      req(input$n_classes)
+      req(input$colors)
+      
+      chosen_data <- crime_merged_sf
+      chosen_var <- input$esda_variable
+      chosen_crime <- input$crime_type
+      chosen_region <- input$region
+      chosen_class <- input$classification
+      chosen_n <- input$n_classes
+      chosen_color <- input$colors
+      
+      data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>%
+        filter(region == chosen_region) %>% 
+        filter(type == chosen_crime)
+      
+      # for debugging ---------------------------------------------------
+      print(chosen_data)
+      print('---------------------------------------------------------------')
+      print(chosen_var)
+      print('---------------------------------------------------------------')
+      print(chosen_crime)
+      print('---------------------------------------------------------------')
+      print(chosen_region)
+      print('---------------------------------------------------------------')
+      print(chosen_class)
+      print('---------------------------------------------------------------')
+      print(chosen_n)
+      print('---------------------------------------------------------------')
+      print(chosen_color)
+      print('---------------------------------------------------------------')
+      
+      str(data)
+      
+      tmap_mode('view')
+      tmap_options(check.and.fix = TRUE)
+      tm_shape(data) +
+        tm_fill(
+          col = chosen_var,
+          palette = chosen_color,
+          style = chosen_class,
+          n = chosen_n,
+        ) +
+        tm_layout(
+          main.title = paste(chosen_crime))
+    })
+    output$choro_map <- renderTmap({
+      choropleth_map()
+    })
+    
+    
+    # Choropleth desc
+    output$choropleth_desc <- renderText({
+      description_text <- descriptions[['choropleth_desc']]
+      HTML(description_text)
+    })
+    
     # Dynamic choro var options
     observe({
         data <- crime_merged_sf
@@ -277,8 +339,8 @@ function(input, output, session) {
     observe({
         data <- crime_merged_sf
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.x))
+        if ("date.y" %in% colnames(data)){ # hardcode
+            years <- unique(year(data$date.y))
         } else{years <- unique(year(data$date))}
         
         updateSelectInput(session, 'local_time_period',
@@ -291,77 +353,13 @@ function(input, output, session) {
     observe({
         data <- crime_merged_sf
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.x))
+        if ("date.y" %in% colnames(data)){ # hardcode
+            years <- unique(year(data$date.y))
         } else{years <- unique(year(data$date))}
         
         updateSelectInput(session, 'global_time_period',
             choices = years,
             selected = years[1])
-    })
-    
-    
-    # Choloropleth output
-    choropleth_map <- eventReactive(input$submit_esda,{
-        req(input$esda_variable)
-        req(input$esda_dataset)
-        req(input$crime_type)
-        req(input$region)
-        req(input$classification)
-        req(input$n_classes)
-        req(input$colors)
-        
-        chosen_data <- crime_merged_sf
-        chosen_var <- input$esda_variable
-        chosen_crime <- input$crime_type
-        chosen_region <- input$region
-        chosen_class <- input$classification
-        chosen_n <- input$n_classes
-        chosen_color <- input$colors
-        
-        data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>%
-            filter(region == chosen_region) %>% 
-            filter(type == chosen_crime)
-        
-        # for debugging ---------------------------------------------------
-        print(chosen_data)
-        print('---------------------------------------------------------------')
-        print(chosen_var)
-        print('---------------------------------------------------------------')
-        print(chosen_crime)
-        print('---------------------------------------------------------------')
-        print(chosen_region)
-        print('---------------------------------------------------------------')
-        print(chosen_class)
-        print('---------------------------------------------------------------')
-        print(chosen_n)
-        print('---------------------------------------------------------------')
-        print(chosen_color)
-        print('---------------------------------------------------------------')
-        
-        str(data)
-
-        tmap_mode('view')
-        tmap_options(check.and.fix = TRUE)
-        tm_shape(data) +
-            tm_fill(
-                col = chosen_var,
-                palette = chosen_color,
-                style = chosen_class,
-                n = chosen_n,
-            ) +
-            tm_layout(
-                main.title = paste(chosen_crime))
-    })
-    output$choro_map <- renderTmap({
-        choropleth_map()
-    })
-    
-    
-    # Choropleth desc
-    output$choropleth_desc <- renderText({
-      description_text <- descriptions[['choropleth_desc']]
-      HTML(description_text)
     })
     
     
@@ -377,8 +375,8 @@ function(input, output, session) {
             # missing data if any
             filter(!is.na(crime_rate))
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.x) == chosen_year)
+        if ("date.y" %in% colnames(data)){ # hardcode
+            data <- data %>% filter(year(data$date.y) == chosen_year)
         } else{data <- data %>% filter(year(data$date) == chosen_year)}
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$global_contiguity))
@@ -457,8 +455,8 @@ function(input, output, session) {
             # missing data if any
             filter(!is.na(crime_rate))
         
-        if ("date.x" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.x) == chosen_year)
+        if ("date.y" %in% colnames(data)){ # hardcode
+            data <- data %>% filter(year(data$date.y) == chosen_year)
         } else{data <- data %>% filter(year(data$date) == chosen_year)}
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$Contiguity))
