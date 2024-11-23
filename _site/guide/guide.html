@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Santhya, William, Marcus">
 
-<title>guide – Geo-PEACE</title>
+<title>Project Guide[THIS IS A DRAFTTTTTTTTTTTT] – Geo-PEACE</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -121,17 +122,230 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><strong>Overview</strong></a></li>
+  <li><a href="#tabs-and-functionalities" id="toc-tabs-and-functionalities" class="nav-link" data-scroll-target="#tabs-and-functionalities"><strong>Tabs and Functionalities</strong></a>
+  <ul class="collapse">
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><strong>Data</strong></a></li>
+  <li><a href="#eda-tab" id="toc-eda-tab" class="nav-link" data-scroll-target="#eda-tab"><strong>EDA Tab</strong></a></li>
+  <li><a href="#esda-tab-tbc" id="toc-esda-tab-tbc" class="nav-link" data-scroll-target="#esda-tab-tbc"><strong>ESDA Tab (——————– TBC——————— )</strong></a></li>
+  <li><a href="#jargon-and-interpretations" id="toc-jargon-and-interpretations" class="nav-link" data-scroll-target="#jargon-and-interpretations"><strong>3. Jargon and Interpretations</strong></a></li>
+  <li><a href="#tips-and-best-practices" id="toc-tips-and-best-practices" class="nav-link" data-scroll-target="#tips-and-best-practices"><strong>4. Tips and Best Practices</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project Guide[THIS IS A DRAFTTTTTTTTTTTT]</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Santhya, William, Marcus </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
+</header>
+
+
+<p>This guide will help you to navigate and use our Shiny web application effectively. It is structured around uncovering meaningful patterns in crime data.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/clipboard-1887300147.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="100"></p>
+</figure>
+</div>
+<hr>
+<section id="overview" class="level1">
+<h1><strong>Overview</strong></h1>
+<p>The application is divided into several tabs:</p>
+<ul>
+<li><p><strong>Data</strong>: View and explore the dataset structure and summaries.</p></li>
+<li><p><strong>EDA (Exploratory Data Analysis)</strong>: Visualize and analyze relationships between variables.</p></li>
+<li><p><strong>ESDA (Exploratory Spatial Data Analysis)</strong>: Perform geospatial analyses and view choropleth maps.</p></li>
+<li><p><strong>Clustering</strong>: Apply clustering techniques using <strong>Hierarchical Cluster Analysis</strong> (abbreviated to <strong><code>hclust</code></strong>), the R package <a href="https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html"><code>ClustGeo</code></a> and the <strong><code>SKATER</code></strong> method of <a href="https://cran.r-project.org/web/packages/spdep/spdep.pdf"><strong><code>spdep</code></strong></a> package</p></li>
+</ul>
+<section id="working-dataset" class="level4">
+<h4 class="anchored" data-anchor-id="working-dataset">Working Dataset:</h4>
+<ol type="1">
+<li><strong><code>crime_merged_sf</code></strong>: Contains crime figures, geographical data, and spatial attributes.</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="tabs-and-functionalities" class="level1">
+<h1><strong>Tabs and Functionalities</strong></h1>
+<section id="data" class="level3">
+<h3 class="anchored" data-anchor-id="data"><strong>Data</strong></h3>
+<ul>
+<li><p><strong>Purpose</strong>: Understand the dataset structure and get an initial overview.</p></li>
+<li><p><strong>Features</strong>:</p>
+<ol type="1">
+<li><p><strong>Dataset Selection</strong>: Choose the dataset (<code>crime_merged_sf</code>).</p></li>
+<li><p><strong>Display Options</strong>:</p>
+<ul>
+<li><p><strong>Preview</strong>: View the dataset as an interactive table.</p></li>
+<li><p><strong><code>str()</code></strong>: Show the structure of the dataset (variables and types).</p></li>
+<li><p><strong><code>glimpse()</code></strong>: Display a concise summary of the dataset.</p></li>
+</ul></li>
+<li><p><strong>Data Table</strong>: Displays data structure and contents.</p></li>
+<li><p><strong>Description</strong>: Provides contextual information about the dataset.</p></li>
+<li><p><strong>Export Buttons:</strong> Allows for data download directly and in Excel or PDF format</p></li>
+</ol></li>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li><p>Select your preferred display option to explore the dataset.</p></li>
+<li><p>Use the data table to understand overall trends.</p></li>
+<li><p>Export if necessary</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="eda-tab" class="level3">
+<h3 class="anchored" data-anchor-id="eda-tab"><strong>EDA Tab</strong></h3>
+<ul>
+<li><p><strong>Purpose</strong>: Analyze and visualize categorical or continuous variables.</p></li>
+<li><p><strong>Features</strong>:</p>
+<ol type="1">
+<li><p><strong>Variable Type Selection</strong>: Choose between <code>Categorical</code> or <code>Continuous</code> variables.</p></li>
+<li><p><strong>Variable Selection</strong>: Select a specific variable for analysis.</p></li>
+<li><p><strong>Chart Type</strong>: Options are dynamically updated based on the variable type (e.g., histograms for continuous, bar charts for categorical).</p></li>
+<li><p><strong>Generate Plot</strong>: View plots of selected variables.</p></li>
+<li><p><strong>Summary Statistics</strong> (for continuous variables): Displays additional statistical summaries e.g.&nbsp;mean, median, and standard deviation.</p></li>
+</ol></li>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li><p>Select a dataset and variable type, then choose a variable and chart type.</p></li>
+<li><p>Click <strong>Generate Plot</strong> to view the visualizations.</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="esda-tab-tbc" class="level3">
+<h3 class="anchored" data-anchor-id="esda-tab-tbc"><strong>ESDA Tab (——————– TBC——————— )</strong></h3>
+<ul>
+<li><p><strong>Purpose</strong>: Conduct spatial analyses and visualize crime data geographically.</p></li>
+<li><p><strong>Features</strong>:</p>
+<ol type="1">
+<li><p><strong>Crime Rate Choropleth</strong>:</p>
+<ul>
+<li><p>Select a dataset and variable to plot spatially.</p></li>
+<li><p>Configure settings like classification methods and the number of classes.</p></li>
+<li><p>Customize colors and regions (e.g., Peninsular or East Malaysia).</p></li>
+</ul></li>
+<li><p><strong>Global</strong> (Global Measures of Spatial Autocorrelation):</p>
+<ul>
+<li>Moran’s I statistic to measure global spatial autocorrelation.</li>
+</ul></li>
+<li><p><strong>Local</strong> (Local Measures of Spatial Autocorrelation):</p>
+<ul>
+<li>LISA (Local Indicators of Spatial Association) to detect hotspots and clusters.</li>
+</ul></li>
+</ol></li>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li><p>Configure the desired settings (e.g., variable, region).</p></li>
+<li><p>Click <strong>Generate Map</strong> to view the output.</p></li>
+</ul></li>
+</ul>
+<hr>
+<section id="clustering-tab-tbc" class="level4">
+<h4 class="anchored" data-anchor-id="clustering-tab-tbc"><strong>2.4 Clustering Tab (——————– TBC——————— )</strong></h4>
+<ul>
+<li><p><strong>Purpose</strong>: Segment data spatially using clustering methods.</p></li>
+<li><p><strong>Key Methods</strong>:</p>
+<ol type="1">
+<li><p><strong>SKATER</strong>: Spatial clustering based on graph theory.</p>
+<ul>
+<li><p>Configure the number of clusters (<code>k</code>).</p></li>
+<li><p>Run SKATER and view clusters on a map.</p></li>
+</ul></li>
+<li><p><strong>Hierarchical Clustering (<code>hclust</code>)</strong> (additional tab):</p>
+<ul>
+<li><p>Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).</p></li>
+<li><p>View dendograms, heatmaps, and spatial cluster maps.</p></li>
+</ul></li>
+<li><p><strong>ClustGeo</strong></p></li>
+</ol></li>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li><p>For <strong>SKATER</strong>: Choose the dataset, distance method, and the number of clusters. Click <strong>Run SKATER</strong> to visualize results.</p></li>
+<li><p>For <strong>hclust</strong>: Select a proximity method, clustering method, and desired number of clusters, then click <strong>Generate Plots</strong>.</p></li>
+<li><p>For <strong>ClustGeo</strong>:</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="jargon-and-interpretations" class="level3">
+<h3 class="anchored" data-anchor-id="jargon-and-interpretations"><strong>3. Jargon and Interpretations</strong></h3>
+<section id="crime-data-terms" class="level4">
+<h4 class="anchored" data-anchor-id="crime-data-terms"><strong>Crime Data Terms</strong></h4>
+<ul>
+<li><p><strong>Crime Rate</strong>: The number of crimes per population unit, used to standardize comparisons.</p></li>
+<li><p><strong>Region</strong>: Refers to either Peninsular or East Malaysia.</p></li>
+<li><p><strong>Crime Type</strong>: Categories of crime, such as theft, assault, etc.</p></li>
+</ul>
+</section>
+<section id="spatial-analysis-terms" class="level4">
+<h4 class="anchored" data-anchor-id="spatial-analysis-terms"><strong>Spatial Analysis Terms</strong></h4>
+<ul>
+<li><p><strong>Choropleth Map</strong>: A thematic map where areas are shaded based on a variable’s value (e.g., crime rate).</p></li>
+<li><p><strong>Spatial Autocorrelation</strong>: Measures how much nearby locations influence each other in terms of a variable.</p></li>
+<li><p><strong>Moran’s I</strong>: A statistic that quantifies global spatial autocorrelation.</p></li>
+<li><p><strong>LISA</strong>: Identifies local clusters and spatial outliers.</p></li>
+</ul>
+</section>
+<section id="clustering-terms" class="level4">
+<h4 class="anchored" data-anchor-id="clustering-terms"><strong>Clustering Terms</strong></h4>
+<ul>
+<li><p><strong>SKATER</strong>: Groups regions based on both spatial proximity and similarity in attributes.</p></li>
+<li><p><strong>Distance Metrics</strong>: Methods to measure similarity or dissimilarity between points (e.g., Euclidean, Manhattan).</p></li>
+<li><p><strong>Hierarchical Clustering</strong>: A method that builds clusters step-by-step either by merging or splitting groups.</p></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="tips-and-best-practices" class="level3">
+<h3 class="anchored" data-anchor-id="tips-and-best-practices"><strong>4. Tips and Best Practices</strong></h3>
+<ol type="1">
+<li><p><strong>Data Exploration</strong>: Start with the <strong>Data Tab</strong> to familiarize yourself with the dataset.</p></li>
+<li><p><strong>Analysis Workflow</strong>:</p>
+<ul>
+<li><p>Use the <strong>EDA Tab</strong> for variable-specific insights.</p></li>
+<li><p>Move to <strong>ESDA</strong> for spatial patterns and relationships.</p></li>
+<li><p>Apply clustering in the <strong>Clustering Tab</strong> for advanced segmentation.</p></li>
+</ul></li>
+<li><p><strong>Error Handling</strong>:</p>
+<ul>
+<li><p>Ensure all data discrepancies are resolved i.e.&nbsp;inconsistent column headings, varying data conventions, formatting.</p></li>
+<li><p>Ensure variable selection matches its type (categorical/continuous).</p></li>
+<li><p>Remove missing values before performing spatial or clustering analysis.</p></li>
+</ul></li>
+</ol>
+<hr>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

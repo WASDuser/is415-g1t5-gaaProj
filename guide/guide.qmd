@@ -1,0 +1,199 @@
+---
+title: "Project Guide[THIS IS A DRAFTTTTTTTTTTTT]"
+author: "Santhya, William, Marcus"
+code-link: true
+---
+
+This guide will help you to navigate and use our Shiny web application effectively. It is structured around uncovering meaningful patterns in crime data.
+
+![](images/clipboard-1887300147.png){fig-align="center" width="100"}
+
+------------------------------------------------------------------------
+
+# **Overview**
+
+The application is divided into several tabs:
+
+-   **Data**: View and explore the dataset structure and summaries.
+
+-   **EDA (Exploratory Data Analysis)**: Visualize and analyze relationships between variables.
+
+-   **ESDA (Exploratory Spatial Data Analysis)**: Perform geospatial analyses and view choropleth maps.
+
+-   **Clustering**: Apply clustering techniques using **Hierarchical Cluster Analysis** (abbreviated to **`hclust`**), the R package [`ClustGeo`](https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html) and the **`SKATER`** method of [**`spdep`**](https://cran.r-project.org/web/packages/spdep/spdep.pdf) package
+
+#### Working Dataset:
+
+1.  **`crime_merged_sf`**: Contains crime figures, geographical data, and spatial attributes.
+
+------------------------------------------------------------------------
+
+# **Tabs and Functionalities**
+
+### **Data**
+
+-   **Purpose**: Understand the dataset structure and get an initial overview.
+
+-   **Features**:
+
+    1.  **Dataset Selection**: Choose the dataset (`crime_merged_sf`).
+
+    2.  **Display Options**:
+
+        -   **Preview**: View the dataset as an interactive table.
+
+        -   **`str()`**: Show the structure of the dataset (variables and types).
+
+        -   **`glimpse()`**: Display a concise summary of the dataset.
+
+    3.  **Data Table**: Displays data structure and contents.
+
+    4.  **Description**: Provides contextual information about the dataset.
+
+    5.  **Export Buttons:** Allows for data download directly and in Excel or PDF format
+
+-   **How to Use**:
+
+    -   Select your preferred display option to explore the dataset.
+
+    -   Use the data table to understand overall trends.
+
+    -   Export if necessary
+
+------------------------------------------------------------------------
+
+### **EDA Tab**
+
+-   **Purpose**: Analyze and visualize categorical or continuous variables.
+
+-   **Features**:
+
+    1.  **Variable Type Selection**: Choose between `Categorical` or `Continuous` variables.
+
+    2.  **Variable Selection**: Select a specific variable for analysis.
+
+    3.  **Chart Type**: Options are dynamically updated based on the variable type (e.g., histograms for continuous, bar charts for categorical).
+
+    4.  **Generate Plot**: View plots of selected variables.
+
+    5.  **Summary Statistics** (for continuous variables): Displays additional statistical summaries e.g. mean, median, and standard deviation.
+
+-   **How to Use**:
+
+    -   Select a dataset and variable type, then choose a variable and chart type.
+
+    -   Click **Generate Plot** to view the visualizations.
+
+------------------------------------------------------------------------
+
+### **ESDA Tab (-------------------- TBC--------------------- )**
+
+-   **Purpose**: Conduct spatial analyses and visualize crime data geographically.
+
+-   **Features**:
+
+    1.  **Crime Rate Choropleth**:
+
+        -   Select a dataset and variable to plot spatially.
+
+        -   Configure settings like classification methods and the number of classes.
+
+        -   Customize colors and regions (e.g., Peninsular or East Malaysia).
+
+    2.  **Global** (Global Measures of Spatial Autocorrelation):
+
+        -   Moran’s I statistic to measure global spatial autocorrelation.
+
+    3.  **Local** (Local Measures of Spatial Autocorrelation):
+
+        -   LISA (Local Indicators of Spatial Association) to detect hotspots and clusters.
+
+-   **How to Use**:
+
+    -   Configure the desired settings (e.g., variable, region).
+
+    -   Click **Generate Map** to view the output.
+
+------------------------------------------------------------------------
+
+#### **2.4 Clustering Tab  (-------------------- TBC--------------------- )**
+
+-   **Purpose**: Segment data spatially using clustering methods.
+
+-   **Key Methods**:
+
+    1.  **SKATER**: Spatial clustering based on graph theory.
+
+        -   Configure the number of clusters (`k`).
+
+        -   Run SKATER and view clusters on a map.
+
+    2.  **Hierarchical Clustering (`hclust`)** (additional tab):
+
+        -   Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).
+
+        -   View dendograms, heatmaps, and spatial cluster maps.
+
+    3.  **ClustGeo**
+
+-   **How to Use**:
+
+    -   For **SKATER**: Choose the dataset, distance method, and the number of clusters. Click **Run SKATER** to visualize results.
+
+    -   For **hclust**: Select a proximity method, clustering method, and desired number of clusters, then click **Generate Plots**.
+
+    -   For **ClustGeo**:
+
+------------------------------------------------------------------------
+
+### **3. Jargon and Interpretations**
+
+#### **Crime Data Terms**
+
+-   **Crime Rate**: The number of crimes per population unit, used to standardize comparisons.
+
+-   **Region**: Refers to either Peninsular or East Malaysia.
+
+-   **Crime Type**: Categories of crime, such as theft, assault, etc.
+
+#### **Spatial Analysis Terms**
+
+-   **Choropleth Map**: A thematic map where areas are shaded based on a variable's value (e.g., crime rate).
+
+-   **Spatial Autocorrelation**: Measures how much nearby locations influence each other in terms of a variable.
+
+-   **Moran’s I**: A statistic that quantifies global spatial autocorrelation.
+
+-   **LISA**: Identifies local clusters and spatial outliers.
+
+#### **Clustering Terms**
+
+-   **SKATER**: Groups regions based on both spatial proximity and similarity in attributes.
+
+-   **Distance Metrics**: Methods to measure similarity or dissimilarity between points (e.g., Euclidean, Manhattan).
+
+-   **Hierarchical Clustering**: A method that builds clusters step-by-step either by merging or splitting groups.
+
+------------------------------------------------------------------------
+
+### **4. Tips and Best Practices**
+
+1.  **Data Exploration**: Start with the **Data Tab** to familiarize yourself with the dataset.
+
+2.  **Analysis Workflow**:
+
+    -   Use the **EDA Tab** for variable-specific insights.
+
+    -   Move to **ESDA** for spatial patterns and relationships.
+
+    -   Apply clustering in the **Clustering Tab** for advanced segmentation.
+
+3.  **Error Handling**:
+
+    -   Ensure all data discrepancies are resolved i.e. inconsistent column headings, varying data conventions, formatting.
+
+    -   Ensure variable selection matches its type (categorical/continuous).
+
+    -   Remove missing values before performing spatial or clustering analysis.
+
+------------------------------------------------------------------------
