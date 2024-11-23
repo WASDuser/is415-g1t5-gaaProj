@@ -693,6 +693,9 @@ function(input, output, session) {
       description_text <- descriptions[['hclust_desc']]
       HTML(description_text)
     })
+    
+    
+#----------------------------------------------------------------------------------------------------------
     #ClustGeo
     clustGeo_dataset_reactive <- reactive({
       req(input$clustGeo_dataset)
@@ -709,37 +712,6 @@ function(input, output, session) {
     })
     
     source('clustGeo.R')
-    
-    # observeEvent(input$run_clustGeo,{
-    #   print('---------- start ----------')
-    #   data <- clustGeo_dataset_reactive()
-    #   # glimpse(data)
-    #   selected_year <- 2023
-    #   selected_region <- 'Peninsular'
-    #   
-    #   filtered_data <- prep_data(data, selected_year, selected_region)
-    #   # glimpse(filtered_data)
-    #   
-    #   # Run clustering algorithm
-    #   clust_result <- run_clust(filtered_data, meth = input$clustGeo_method, n_clusters = input$nClust)
-    #   
-    #   # Render map
-    #   output$clustGeoMap <- renderTmap({
-    #     tmap_mode('plot')
-    #     map <- qtm(clust_result, "CLUSTER") +
-    #       tm_borders(alpha = 0.5) +
-    #       tm_view(set.zoom.limits = c(6, 7))
-    #     map
-    #   })
-    #   
-    #   # Render choicealpha graph
-    #   output$choicealpha <- renderPlotly({
-    #     # Assuming `choicealpha` returns a plot object, adapt this to match your function
-    #     choicealpha_graph <- choicealpha(filtered_data)
-    #     ggplotly(choicealpha_graph)
-    #   })
-    #   print('---------- end ----------')
-    # })
     
     observeEvent(input$run_clustGeo, {
       req(input$nClust, input$clustGeo_method, input$clustGeo_region)
@@ -759,6 +731,7 @@ function(input, output, session) {
       cr <- clust_result$cr
 
       print(clust_result)
+      
       # Render map
       output$clustGeoMap <- renderTmap({
         tmap_mode('view')
@@ -767,13 +740,28 @@ function(input, output, session) {
           tm_view(set.zoom.limits = c(6, 7))
         map
       })
+      
+      print(str(cr))
 
-      # Render choicealpha graph
       output$choicealpha <- renderPlotly({
-        # Assuming `choicealpha` returns a plot object, adapt this to match your function
-        choicealpha_graph <- cr
-        ggplotly(choicealpha_graph)
+        # Extract relevant data from the 'choicealpha' object
+        cr_data <- cr$desired_component  # Replace with the actual extraction logic
+        
+        # Check if the extracted data has the correct format
+        if ("variable" %in% names(cr_data) && "value" %in% names(cr_data)) {
+          cr_df <- as.data.frame(cr_data)  # Ensure it's a data frame
+          
+          # Create a ggplot object
+          p <- ggplot(cr_df, aes(x = variable, y = value)) + 
+            geom_bar(stat = "identity")
+          
+          # Convert to Plotly and return
+          ggplotly(p)
+        } else {
+          print("cr does not contain 'variable' and 'value' columns")
+        }
       })
+      
     })
     
 #-----------------------------------------------------------------------------------------------------------
