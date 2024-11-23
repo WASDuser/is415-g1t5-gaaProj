@@ -30,7 +30,7 @@ navbarPage(
                     verbatimTextOutput("code_output")
                 ),
                 tags$br(),
-                uiOutput("description_text"),
+                uiOutput("data_desc"),
                 tags$br(),
                 tableOutput("summary_stats"),
             )
@@ -68,7 +68,9 @@ navbarPage(
                 conditionalPanel(
                     condition = "input.submit_eda > 0 && input.var_type == 'cont'",
                     verbatimTextOutput("summary_table")
-                )
+                ),
+                tags$br(),
+                uiOutput("eda_desc")
             )
         )
     ),
@@ -82,10 +84,10 @@ navbarPage(
                     
                     actionButton("submit_esda", "Generate Map"),hr(),
                     
-                    selectInput("esda_dataset", "Choose Dataset:", 
-                        choices = list(
-                            "crime_merged_sf" = "crime_merged_sf"
-                        )),
+                    # selectInput("esda_dataset", "Choose Dataset:", 
+                    #     choices = list(
+                    #         "crime_merged_sf" = "crime_merged_sf"
+                    #     )),
                     
                     selectInput("esda_variable", "Select Variable for Choropleth:", 
                         choices = NULL,
@@ -124,11 +126,11 @@ navbarPage(
                     
                     actionButton("submit_global", "Update Plot"), hr(),
                     
-                    tags$small("*only west works for now*"),
-                    selectInput("esda_dataset", "Choose Dataset:",
-                        choices = list(
-                            "crime_merged_sf" = "crime_merged_sf"
-                        )),
+                    # tags$small("*only west works for now*"),
+                    # selectInput("esda_dataset", "Choose Dataset:",
+                    #     choices = list(
+                    #         "crime_merged_sf" = "crime_merged_sf"
+                    #     )),
                     
                     selectInput("global_time_period", "Select year:",
                         choices = NULL,
@@ -169,11 +171,11 @@ navbarPage(
                     
                     actionButton("MoranUpdate", "Update Plot"),hr(),
                     
-                    tags$small("*only west works for now*"),
-                    selectInput("esda_dataset", "Choose Dataset:", 
-                        choices = list(
-                            "crime_merged_sf" = "crime_merged_sf"
-                        )),
+                    # tags$small("*only west works for now*"),
+                    # selectInput("esda_dataset", "Choose Dataset:", 
+                    #     choices = list(
+                    #         "crime_merged_sf" = "crime_merged_sf"
+                    #     )),
                     
                     selectInput("local_time_period", "Select year:",
                         choices = NULL,
@@ -242,12 +244,19 @@ navbarPage(
                         conditionalPanel(
                             condition = "input.submit_esda",
                             tmapOutput("choro_map"),
-                        )
+                            tags$br(),
+                        ),
+                        uiOutput("choropleth_desc"),
                     ),
                     tabPanel("Global", value = 'globalTab',
                         # Placeholder content for the second map
-                        plotOutput("global_hist"),
-                        DTOutput("global_output")  # Placeholder for future map
+                        conditionalPanel(
+                            condition = "input.submit_global",
+                            plotOutput("global_hist"),
+                            DTOutput("global_output"),  # Placeholder for future map
+                            tags$br(),
+                        ),
+                        uiOutput("global_desc"),
                     ),
                     tabPanel("Local", value = 'localTab',
                         # Placeholder content for the third map
@@ -255,7 +264,9 @@ navbarPage(
                             condition = "input.MoranUpdate",
                             tmapOutput("LocalMoranMap"),
                             tmapOutput("LISA"),
-                        )
+                            tags$br(),
+                        ),
+                        uiOutput("local_desc"),
                     ),
                 )
             )
@@ -352,8 +363,8 @@ navbarPage(
                                                    tmapOutput("hclustMap"),
                                                  )
                                         ),
-                            )
-                            
+                            ),
+                              uiOutput("hclust_desc"),
                           )
                           
                           
@@ -364,8 +375,8 @@ navbarPage(
             sidebarLayout(
                 sidebarPanel(
                     # Input: Select dataset
-                    selectInput("skater_dataset", "Choose Dataset:",
-                        choices = list("crime_merged_sf" = "crime_merged_sf")),
+                    # selectInput("skater_dataset", "Choose Dataset:",
+                    #     choices = list("crime_merged_sf" = "crime_merged_sf")),
                     
                     # Input: Select distance method
                     selectInput("skater_method", "Choose distance method:",
@@ -381,7 +392,8 @@ navbarPage(
                 
                 mainPanel(
                     # Output: Plot for SKATER results
-                    tmapOutput("skater_plot")
+                    tmapOutput("skater_plot"),
+                    uiOutput("skater_desc"),
                 )
             ))
         )

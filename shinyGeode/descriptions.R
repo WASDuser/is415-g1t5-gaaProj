@@ -35,9 +35,18 @@ descriptions <- list(
   </ol>
   This dataset is ideal for exploring trends, analyzing relationships, and conducting geospatial analysis on crime in Batu Pahat, Peninsular Malaysia.
   ",
-  eda_desc = "",
-  esda_desc = "",
-  hclust_desc = "",
-  clustgeo_desc = "",
-  skater_desc = ""
+  eda_desc = "
+    <b>Bar Chart</b>
+    <br>A bar chart is a graphical representation of categorical data. Each category is represented by a bar whose length corresponds to its frequency or count. This is useful for comparing discrete groups or categories in your dataset.<br>
+    <b>Boxplot</b>
+    <br>A boxplot is a standardized way of displaying the distribution of data based on a five-number summary: minimum, first quartile, median, third quartile, and maximum. It highlights outliers and variability within a dataset.<br>
+    <b>Histogram</b>
+    <br>A histogram is a graphical representation of the distribution of numerical data. It groups data into bins or intervals, allowing for the visualization of frequency distributions and data spread.
+  ",
+  choropleth_desc = "choropleth",
+  global_desc = "global",
+  local_desc = "local",
+  hclust_desc = "hclust",
+  clustgeo_desc = "clustgeo",
+  skater_desc = "skater"
 )
