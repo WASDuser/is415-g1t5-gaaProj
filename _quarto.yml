@@ -2,15 +2,15 @@ project:
   type: website
 
 website:
-  title: "is415-g1t5-project"
+  title: "Geo-PEACE"
   navbar:
     left:
       - href: 'proposal/proposal.qmd'
         text: Proposal
       - href: 'poster/poster.qmd'
         text: Poster
-      - href: 'data-wrangling/data_wrangling.qmd'
-        text: Data Wrangling
+      - href: 'guide/guide.qmd'
+        text: User Guide
       - href: 'https://williamtjw.shinyapps.io/shinyGeode/'
         text: Shiny App
     right: 
