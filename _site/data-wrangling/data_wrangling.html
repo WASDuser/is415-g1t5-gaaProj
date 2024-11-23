@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="William Tan Juin Wei, Marcus Jaeson Yeo, Santhya Thirumarai Selvan">
 <meta name="dcterms.date" content="2024-10-01">
 
-<title>Data Wrangling – is415-g1t5-project</title>
+<title>Data Wrangling – Geo-PEACE</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">is415-g1t5-project</span>
+    <span class="navbar-title">Geo-PEACE</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -133,8 +133,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Poster</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../data-wrangling/data_wrangling.html" aria-current="page"> 
-<span class="menu-text">Data Wrangling</span></a>
+    <a class="nav-link" href="../guide/guide.html"> 
+<span class="menu-text">User Guide</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://williamtjw.shinyapps.io/shinyGeode/"> 
@@ -189,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 26, 2024</p>
+      <p class="date-modified">October 30, 2024</p>
     </div>
   </div>
     
@@ -271,20 +271,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Load in the aspatial and spatial data.</p>
+<p>For our project, we will be using three datasets:</p>
+<ul>
+<li><p><em>crime_district.csv</em> is a csv file containing data on crimes in Malaysia at the district level</p></li>
+<li><p>population_district.csv is a csv file containing data of the population of Malaysia, also at the district level</p></li>
+<li><p>Malaysia Admin 2 Boundary in shapefile format.</p></li>
+</ul>
+<p>I will be loading them into the R environment using <em>read_csv()</em> function of the <strong>readr</strong> package for the aspatial data and the <em>st_read()</em> function of the <strong>sf</strong> package for the geospatial data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/crime_district.csv"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>population_district <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/population_district.csv"</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>msia_adm2_sf <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">'data/geospatial'</span>, <span class="at">layer =</span> <span class="st">'mys_admbnda_adm2_unhcr_20210211'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>formatting the crime data to only include the state names and their respective districts. Also filter out the rows where the data is aggregated across the crime types, as well as across the districts. Since population data is from 2016-2022, we will also remove the 2023 date rows.</p>
+<p>The crime dataset has rows that have crime data aggregated across all the districts, and across all the crime types. It also contains rows where the data is aggregated over just the crime types. All of these rows are grouped by their dates.</p>
+<p>Hence, firstly, we will be formatting the crime data to only include the state names and their respective districts, and remove all the rows that contain aggregated values. Since population data is from 2020-2024, we will only keep the data for the years 2020-2023. All of this will be done using the <em>filter()</em> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> crime_district <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&gt;=</span> <span class="dv">2020</span> <span class="sc">&amp;</span> <span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&lt;=</span> <span class="dv">2023</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(state <span class="sc">!=</span> <span class="st">"Malaysia"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(category <span class="sc">==</span> <span class="st">"assault"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(district <span class="sc">!=</span> <span class="st">"All"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(type <span class="sc">!=</span> <span class="st">"all"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(type <span class="sc">!=</span> <span class="st">"all"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&gt;=</span> <span class="dv">2020</span> <span class="sc">&amp;</span> <span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&lt;=</span> <span class="dv">2023</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>formatting the population data table to be simpler</p>
 <div class="cell">
@@ -365,15 +373,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"seberang perai utara"</span>, <span class="st">"s.p. utara"</span>, district)) <span class="sc">%&gt;%</span> </span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"seberang perai selatan"</span>, <span class="st">"s.p.selatan"</span>, district)) <span class="sc">%&gt;%</span> </span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"petaling jaya"</span>, <span class="st">"petaling"</span>, district)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"matu daro"</span>, <span class="st">"matu"</span>, district))</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>pop_data <span class="ot">&lt;-</span> pop_data <span class="sc">%&gt;%</span> </span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"kulai"</span>, <span class="st">"kulaijaya"</span>, district)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp tengah"</span>, <span class="st">"s.p. tengah"</span>, district)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp utara"</span>, <span class="st">"s.p. utara"</span>, district)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp selatan"</span>, <span class="st">"s.p.selatan"</span>, district)) <span class="sc">%&gt;%</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"cameron highland"</span>, <span class="st">"cameron highlands"</span>, district))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"matu daro"</span>, <span class="st">"matu"</span>, district)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"w.p. labuan"</span>, <span class="st">"W.P. Labuan"</span>, state))</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>pop_data <span class="ot">&lt;-</span> pop_data <span class="sc">%&gt;%</span> </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"kulai"</span>, <span class="st">"kulaijaya"</span>, district)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp tengah"</span>, <span class="st">"s.p. tengah"</span>, district)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp utara"</span>, <span class="st">"s.p. utara"</span>, district)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"sp selatan"</span>, <span class="st">"s.p.selatan"</span>, district)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">district =</span> <span class="fu">ifelse</span>(district <span class="sc">==</span> <span class="st">"cameron highland"</span>, <span class="st">"cameron highlands"</span>, district))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once this was done, we isolated the NA values once again. The remaining districts are districts that were missing from one or more of the dataframes, and would have to be removed from the analysis due to the missing data.</p>
 <div class="cell">
@@ -406,16 +415,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> crime_district <span class="sc">%&gt;%</span> </span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(district <span class="sc">%in%</span> drop_list))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now, we would be able to join the dataframes smoothly.</p>
+<p>We then calculated a ratio that is representative of the crime rate in each district by dividing the number of crimes in each district by the population figures for that district and multiplying this by 1000. We then added a new column to the boundary and the crime rate dataframes to indicate if the district belonged to the West or Peninsular region of Malaysia. Since the West and Peninsular regions are not connected by admin borders, we would have to process these regions separately for our analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(pop_data, <span class="st">"data/rds/pop_data.rds"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(crime_district, <span class="st">"data/rds/crime_district.rds"</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(adm2_sf, <span class="st">"data/rds/adm2_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rate_crime_district <span class="ot">&lt;-</span> crime_district <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(pop_data, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"district"</span>, <span class="st">"state"</span>, <span class="st">"date"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">crime_rate =</span> (crimes <span class="sc">/</span> population) <span class="sc">*</span> <span class="dv">1000</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># assigning Penisular , East region</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>rate_crime_district <span class="ot">&lt;-</span> rate_crime_district <span class="sc">%&gt;%</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">case_when</span>(</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sabah"</span>, <span class="st">"Sarawak"</span>) <span class="sc">~</span> <span class="st">"East"</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Peninsular"</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>adm2_sf <span class="ot">&lt;-</span> adm2_sf <span class="sc">%&gt;%</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">case_when</span>(</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        ADM1_EN <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sabah"</span>, <span class="st">"Sarawak"</span>) <span class="sc">~</span> <span class="st">"East"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Peninsular"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pop_data<span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/pop_data.rds"</span>)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/crime_district.rds"</span>)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>adm2_sf <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/adm2_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(pop_data, <span class="st">"data/rds/pop_data.rds"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(crime_district, <span class="st">"data/rds/crime_district.rds"</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(adm2_sf, <span class="st">"data/rds/adm2_sf.rds"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(rate_crime_district, <span class="st">"data/rds/rate_crime_district.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pop_data<span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/pop_data.rds"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/crime_district.rds"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>adm2_sf <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/adm2_sf.rds"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>rate_crime_district<span class="ot">&lt;-</span><span class="fu">read_rds</span>(<span class="st">"data/rds/rate_crime_district.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
