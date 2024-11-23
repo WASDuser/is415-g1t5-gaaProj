@@ -360,6 +360,43 @@ navbarPage(
                         )),
                
         tabPanel('clustGEO'),
+            sidebarLayout(
+              sidebarPanel(
+                # Input: Select dataset
+                selectInput("clustGeo_dataset", "Choose Dataset:",
+                            choices = list("crime_merged_sf" = "crime_merged_sf")),
+                
+                selectInput(inputId = "clustGeo_region",
+                            label = "Region",
+                            choices = list("Peninsular" = "Peninsular",
+                                           "East" = "East"),
+                            selected = "Peninsular"),
+                
+                # Input: Select distance method
+                selectInput("clustGeo_method", "Choose distance method:",
+                            choices = NULL,
+                            selected = NULL),
+                
+                sliderInput(inputId = "nClust", 
+                            label = "Number of Clusters", 
+                            min = 3, max = 15,
+                            value = 6, step = 1),
+                
+                # Button to trigger clustGeo clustering
+                actionButton("run_clustGeo", "Run clustGeo")
+              ),
+              
+              mainPanel(
+                tabsetPanel(id='clustGeoTab',
+                            tabPanel("clustGeo Map", value = 'clustGeoMapTab',
+                                     tmapOutput("clustGeoMap")
+                            ),
+                            tabPanel("ChoiceAlpha Graph", value = 'choicealphaTab',
+                                     plotlyOutput("choicealpha")
+                            )
+                )
+              )
+            ),
         tabPanel('SKATER',
             sidebarLayout(
                 sidebarPanel(

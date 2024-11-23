@@ -669,7 +669,90 @@ function(input, output, session) {
     })
     
     
+    #ClustGeo
+    clustGeo_dataset_reactive <- reactive({
+      req(input$clustGeo_dataset)
+      data <- switch(input$clustGeo_dataset,
+                     "crime_merged_sf" = crime_merged_sf)
+      
+    })
     
+    observe({
+      dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
+      updateSelectInput(session, 'clustGeo_method',
+                        choices = dist_methods,
+                        selected = dist_methods[1])
+    })
+    
+    source('clustGeo.R')
+    
+    # observeEvent(input$run_clustGeo,{
+    #   print('---------- start ----------')
+    #   data <- clustGeo_dataset_reactive()
+    #   # glimpse(data)
+    #   selected_year <- 2023
+    #   selected_region <- 'Peninsular'
+    #   
+    #   filtered_data <- prep_data(data, selected_year, selected_region)
+    #   # glimpse(filtered_data)
+    #   
+    #   # Run clustering algorithm
+    #   clust_result <- run_clust(filtered_data, meth = input$clustGeo_method, n_clusters = input$nClust)
+    #   
+    #   # Render map
+    #   output$clustGeoMap <- renderTmap({
+    #     tmap_mode('plot')
+    #     map <- qtm(clust_result, "CLUSTER") +
+    #       tm_borders(alpha = 0.5) +
+    #       tm_view(set.zoom.limits = c(6, 7))
+    #     map
+    #   })
+    #   
+    #   # Render choicealpha graph
+    #   output$choicealpha <- renderPlotly({
+    #     # Assuming `choicealpha` returns a plot object, adapt this to match your function
+    #     choicealpha_graph <- choicealpha(filtered_data)
+    #     ggplotly(choicealpha_graph)
+    #   })
+    #   print('---------- end ----------')
+    # })
+    
+    observeEvent(input$run_clustGeo, {
+      req(input$nClust, input$clustGeo_method, input$clustGeo_region)
+      data <- clustGeo_dataset_reactive()
+      
+
+      # Filter dataset by region and year
+      filtered_data <- prep_data(data, yr = 2023, reg = input$clustGeo_region)
+      # glimpse(filtered_data)
+
+      # Run clustering algorithm
+      clust_result <- run_clust(filtered_data, meth = input$clustGeo_method, n_clusters = input$nClust)
+      
+      # Extract individual results from the list
+      ngeo_cluster <- clust_result$ngeo_cluster
+      sf_Gcluster <- clust_result$sf_Gcluster
+      cr <- clust_result$cr
+
+      print(clust_result)
+      # Render map
+      output$clustGeoMap <- renderTmap({
+        tmap_mode('view')
+        map <- qtm(sf_Gcluster, "CLUSTER") +
+          tm_borders(alpha = 0.5) +
+          tm_view(set.zoom.limits = c(6, 7))
+        map
+      })
+
+      # Render choicealpha graph
+      output$choicealpha <- renderPlotly({
+        # Assuming `choicealpha` returns a plot object, adapt this to match your function
+        choicealpha_graph <- cr
+        ggplotly(choicealpha_graph)
+      })
+    })
+    
+#-----------------------------------------------------------------------------------------------------------
     
     # SKATER
     skater_dataset_reactive <- reactive({
