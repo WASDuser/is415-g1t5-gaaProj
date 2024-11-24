@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -91,7 +91,7 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="../proposal/proposal.html"> 
-<span class="menu-text">Proposal</span></a>
+<span class="menu-text">Project Overview</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../poster/poster.html"> 
@@ -104,12 +104,6 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="https://williamtjw.shinyapps.io/shinyGeode/"> 
 <span class="menu-text">Shiny App</span></a>
-  </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -132,9 +126,10 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><strong>1. Data</strong></a></li>
   <li><a href="#eda-tab" id="toc-eda-tab" class="nav-link" data-scroll-target="#eda-tab"><strong>2. EDA Tab</strong></a></li>
-  <li><a href="#esda-tab-tbc" id="toc-esda-tab-tbc" class="nav-link" data-scroll-target="#esda-tab-tbc"><strong>3. ESDA Tab (——————– TBC——————— )</strong></a></li>
-  <li><a href="#jargon-and-interpretations" id="toc-jargon-and-interpretations" class="nav-link" data-scroll-target="#jargon-and-interpretations"><strong>3. Jargon and Interpretations</strong></a></li>
-  <li><a href="#tips-and-best-practices" id="toc-tips-and-best-practices" class="nav-link" data-scroll-target="#tips-and-best-practices"><strong>4. Tips and Best Practices</strong></a></li>
+  <li><a href="#esda-tab" id="toc-esda-tab" class="nav-link" data-scroll-target="#esda-tab"><strong>3. ESDA Tab</strong></a></li>
+  <li><a href="#clustering-tab" id="toc-clustering-tab" class="nav-link" data-scroll-target="#clustering-tab"><strong>4. Clustering Tab</strong></a></li>
+  <li><a href="#jargon-and-interpretations" id="toc-jargon-and-interpretations" class="nav-link" data-scroll-target="#jargon-and-interpretations"><strong>5. Jargon and Interpretations</strong></a></li>
+  <li><a href="#tips-and-best-practices" id="toc-tips-and-best-practices" class="nav-link" data-scroll-target="#tips-and-best-practices"><strong>6. Tips and Best Practices</strong></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -239,8 +234,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <hr>
 </section>
-<section id="esda-tab-tbc" class="level3">
-<h3 class="anchored" data-anchor-id="esda-tab-tbc"><strong>3. ESDA Tab (——————– TBC——————— )</strong></h3>
+<section id="esda-tab" class="level3">
+<h3 class="anchored" data-anchor-id="esda-tab"><strong>3. ESDA Tab</strong></h3>
 <ul>
 <li><p><strong>Purpose</strong>: Conduct spatial analyses and visualize crime data geographically.</p></li>
 <li><p><strong>Features</strong>:</p>
@@ -267,55 +262,44 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 <hr>
-<section id="clustering-tab-tbc" class="level4">
-<h4 class="anchored" data-anchor-id="clustering-tab-tbc"><strong>2.4 Clustering Tab (——————– TBC——————— )</strong></h4>
+</section>
+<section id="clustering-tab" class="level3">
+<h3 class="anchored" data-anchor-id="clustering-tab"><strong>4. Clustering Tab</strong></h3>
 <ul>
 <li><p><strong>Purpose</strong>: Segment data spatially using clustering methods.</p></li>
 <li><p><strong>Key Methods</strong>:</p>
 <ol type="1">
 <li><p><strong>SKATER</strong>: Spatial clustering based on graph theory.</p>
 <ul>
-<li><p>Configure the number of clusters (<code>k</code>).</p></li>
-<li><p>Run SKATER and view clusters on a map.</p>
-<ul>
 <li><p><strong>How to Use</strong>:</p>
 <ul>
-<li>Choose the dataset, distance method, and the number of clusters. Click <strong>Run SKATER</strong> to visualize results.</li>
-</ul></li>
+<li>Choose the dataset, distance method, and the number of clusters. Click <strong>Run SKATER</strong> to view clusters on a map.</li>
 </ul></li>
 </ul></li>
 <li><p><strong>Hierarchical Clustering (<code>hclust</code>)</strong>:</p>
 <ul>
-<li><p>Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).</p></li>
-<li><p>View dendograms, heatmaps, and spatial cluster maps.</p>
-<ul>
 <li><p><strong>How to Use</strong>:</p>
 <ul>
-<li>Select a proximity method, clustering method, and desired number of clusters, then click <strong>Generate Plots</strong>.</li>
-</ul></li>
+<li><p>Select a proximity method, clustering method, and desired number of clusters, then click <strong>Generate Plots</strong>.</p></li>
+<li><p>View dendograms, heatmaps, and spatial cluster maps.</p></li>
 </ul></li>
 </ul></li>
 <li><p><strong>ClustGeo:</strong></p>
 <ul>
-<li><p>Select proximity method and number of clusters</p></li>
-<li><p>View Cluster Chloropeth Map and Choice Alpha Graph.</p>
-<ul>
 <li><p><strong>How to Use</strong>:</p>
 <ul>
 <li><p>Select a region, proximity method and number of clusters.</p></li>
-<li><p>Click on the “Run CLUSTGEO” button to generate the plots.</p></li>
-</ul></li>
+<li><p>Click on the “Run CLUSTGEO” button to view Cluster Chloropeth Map and Choice Alpha Graph.</p></li>
 </ul></li>
 </ul></li>
 </ol></li>
 </ul>
 <hr>
 </section>
-</section>
 <section id="jargon-and-interpretations" class="level3">
-<h3 class="anchored" data-anchor-id="jargon-and-interpretations"><strong>3. Jargon and Interpretations</strong></h3>
+<h3 class="anchored" data-anchor-id="jargon-and-interpretations"><strong>5. Jargon and Interpretations</strong></h3>
 <section id="crime-data-terms" class="level4">
-<h4 class="anchored" data-anchor-id="crime-data-terms"><strong>Crime Data Terms</strong></h4>
+<h4 class="anchored" data-anchor-id="crime-data-terms"><strong>5.1 Crime Data Terms</strong></h4>
 <ul>
 <li><p><strong>Crime Rate</strong>: The number of crimes per population unit, used to standardize comparisons.</p></li>
 <li><p><strong>Region</strong>: Refers to either Peninsular or East Malaysia.</p></li>
@@ -323,7 +307,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 </section>
 <section id="spatial-analysis-terms" class="level4">
-<h4 class="anchored" data-anchor-id="spatial-analysis-terms"><strong>Spatial Analysis Terms</strong></h4>
+<h4 class="anchored" data-anchor-id="spatial-analysis-terms"><strong>5.2 Spatial Analysis Terms</strong></h4>
 <ul>
 <li><p><strong>Choropleth Map</strong>: A thematic map where areas are shaded based on a variable’s value (e.g., crime rate).</p></li>
 <li><p><strong>Spatial Autocorrelation</strong>: Measures how much nearby locations influence each other in terms of a variable.</p></li>
@@ -332,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 </section>
 <section id="clustering-terms" class="level4">
-<h4 class="anchored" data-anchor-id="clustering-terms"><strong>Clustering Terms</strong></h4>
+<h4 class="anchored" data-anchor-id="clustering-terms"><strong>5.3 Clustering Terms</strong></h4>
 <ul>
 <li><p><strong>SKATER</strong>: Groups regions based on both spatial proximity and similarity in attributes.</p></li>
 <li><p><strong>Distance Metrics</strong>: Methods to measure similarity or dissimilarity between points (e.g., Euclidean, Manhattan).</p></li>
@@ -342,7 +326,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 </section>
 <section id="tips-and-best-practices" class="level3">
-<h3 class="anchored" data-anchor-id="tips-and-best-practices"><strong>4. Tips and Best Practices</strong></h3>
+<h3 class="anchored" data-anchor-id="tips-and-best-practices"><strong>6. Tips and Best Practices</strong></h3>
 <ol type="1">
 <li><p><strong>Data Exploration</strong>: Start with the <strong>Data Tab</strong> to familiarize yourself with the dataset.</p></li>
 <li><p><strong>Analysis Workflow</strong>:</p>
