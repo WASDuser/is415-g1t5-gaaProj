@@ -8,12 +8,6 @@ navbarPage(
     tabPanel('Data',
         sidebarLayout(
             sidebarPanel(
-                # selectInput("dataset", "Select Dataset:",
-                #     choices = list(
-                #         "crime_merged_sf" = "crime_merged_sf"
-                #     )),
-                
-                
                 radioButtons("display_option", "Select display option for crime_merged_sf):",
                     choices = list(
                         "Preview" = "preview",
@@ -41,11 +35,6 @@ navbarPage(
     tabPanel('EDA',
         sidebarLayout(
             sidebarPanel(
-                # selectInput("esda_dataset", "Select Dataset:",
-                #     choices = list(
-                #         "crime_merged_sf" = "crime_merged_sf"
-                #     )),
-                
                 selectInput("var_type", "Select Variable Type:",
                     choices = list(
                         "Categorical" = "cat",
@@ -83,11 +72,6 @@ navbarPage(
                     condition="input.tabs=='choroTab'", h3("Choropleth settings"),
                     
                     actionButton("submit_esda", "Generate Choropleth"),hr(),
-                    
-                    # selectInput("esda_dataset", "Select Dataset:", 
-                    #     choices = list(
-                    #         "crime_merged_sf" = "crime_merged_sf"
-                    #     )),
                     selectInput("time_period", "Select Year:",
                         choices = NULL,
                         selected = NULL),
@@ -131,12 +115,6 @@ navbarPage(
                     
                     actionButton("submit_global", "Generate Plot"), hr(),
                     
-                    # tags$small("*only west works for now*"),
-                    # selectInput("esda_dataset", "Select Dataset:",
-                    #     choices = list(
-                    #         "crime_merged_sf" = "crime_merged_sf"
-                    #     )),
-                    
                     selectInput("global_time_period", "Select year:",
                         choices = NULL,
                         selected = NULL),
@@ -175,12 +153,6 @@ navbarPage(
                     condition="input.tabs=='localTab'", h3("Local settings"),
                     
                     actionButton("MoranUpdate", "Update Plot"),hr(),
-                    
-                    # tags$small("*only west works for now*"),
-                    # selectInput("esda_dataset", "Select Dataset:", 
-                    #     choices = list(
-                    #         "crime_merged_sf" = "crime_merged_sf"
-                    #     )),
                     
                     selectInput("local_time_period", "Select year:",
                         choices = NULL,
@@ -254,17 +226,15 @@ navbarPage(
                         uiOutput("choropleth_desc"),
                     ),
                     tabPanel("Global", value = 'globalTab',
-                        # Placeholder content for the second map
                         conditionalPanel(
                             condition = "input.submit_global",
                             plotOutput("global_hist"),
-                            DTOutput("global_output"),  # Placeholder for future map
+                            DTOutput("global_output"),
                             tags$br(),
                         ),
                         uiOutput("global_desc"),
                     ),
                     tabPanel("Local", value = 'localTab',
-                        # Placeholder content for the third map
                         conditionalPanel(
                             condition = "input.MoranUpdate",
                             tmapOutput("LocalMoranMap"),
@@ -378,9 +348,6 @@ navbarPage(
         tabPanel('clustGEO',
             sidebarLayout(
               sidebarPanel(
-                # Input: Select dataset
-                #selectInput("clustGeo_dataset", "Select Dataset:",
-                            #choices = list("crime_merged_sf" = "crime_merged_sf")),
                 
                 selectInput(inputId = "clustGeo_region",
                             label = "Select Region",
@@ -392,7 +359,6 @@ navbarPage(
                       choices = NULL,
                       selected = NULL),
                 
-                # Input: Select Distance Method
                 selectInput("clustGeo_method", "Select Distance Method:",
                             choices = NULL,
                             selected = NULL),
@@ -402,7 +368,6 @@ navbarPage(
                             min = 3, max = 15,
                             value = 6, step = 1),
                 
-                # Button to trigger clustGeo clustering
                 actionButton("run_clustGeo", "Run clustGeo")
               ),
               
@@ -420,9 +385,6 @@ navbarPage(
         tabPanel('SKATER',
             sidebarLayout(
                 sidebarPanel(
-                    # Input: Select dataset
-                    # selectInput("skater_dataset", "Select Dataset:",
-                    #     choices = list("crime_merged_sf" = "crime_merged_sf")),
                     selectInput("skater_region", "Select Region:",
                         choices = NULL,
                         selected = NULL),
@@ -431,20 +393,16 @@ navbarPage(
                         choices = NULL,
                         selected = NULL),
                     
-                    # Input: Select Distance Method
                     selectInput("skater_method", "Select Distance Method:",
                         choices = NULL,
                         selected = NULL),
                     
-                    # Input: Number of clusters for SKATER
                     numericInput("n_clusters", "Number of Clusters (k):", value = 6, min = 2, max = 10),
                     
-                    # Button to trigger SKATER clustering
                     actionButton("run_skater", "Run SKATER")
                 ),
                 
                 mainPanel(
-                    # Output: Plot for SKATER results
                     tmapOutput("skater_plot"),
                     uiOutput("skater_desc"),
                 )
