@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -155,7 +155,7 @@ window.Quarto = {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="../proposal/proposal.html" aria-current="page"> 
-<span class="menu-text">Proposal</span></a>
+<span class="menu-text">Project Overview</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../poster/poster.html"> 
@@ -168,12 +168,6 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="https://williamtjw.shinyapps.io/shinyGeode/"> 
 <span class="menu-text">Shiny App</span></a>
-  </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -231,7 +225,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 22, 2024</p>
+      <p class="date-modified">November 24, 2024</p>
     </div>
   </div>
     
@@ -317,15 +311,7 @@ window.Quarto = {
 <li><p><strong>Crime rate calculation</strong></p></li>
 </ul>
 <p><strong>Crime rate</strong> <span class="math inline">\(R_{i,t,c}\)</span> for district <span class="math inline">\(i\)</span> year <span class="math inline">\(t\)</span>, and crime type <span class="math inline">\(c\)</span> is then computed as the proportion of crimes of type <span class="math inline">\(c\)</span> in district <span class="math inline">\(i\)</span> relative to the total crimes in the same district and year, expressed as a percentage:</p>
-<p><span class="math display">\[
-\text{R}_{i,t,c} = \left( \frac{\text{crimes}_{i,t,c}}{\text{total_crimes_year}_{i,t}} \right) \times 100
-\]</span></p>
-<p>Where:</p>
-<ul>
-<li><p><span class="math inline">\(R_{i,t,c}\)</span> is the crime rate for district <span class="math inline">\(i\)</span>, year <span class="math inline">\(t\)</span>, and crime type <span class="math inline">\(c\)</span>,</p></li>
-<li><p><span class="math inline">\(\text{crimes}_{i,t,c}\)</span> <em>is the number of crimes of type</em> <span class="math inline">\(c\)</span> <em>in district</em> <span class="math inline">\(i\)</span> <em>in year</em> <span class="math inline">\(t\)</span><em>,</em></p></li>
-<li><p><span class="math inline">\(\text{total_crimes_year}_{i,t}\)</span> is the total number of crimes in district <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>, computed as the sum of all crimes across types for that district and year.</p></li>
-</ul>
+<p><img src="images/clipboard-528946789.png" class="img-fluid"></p>
 <p>Thus, each crime rate figure corresponds to the proportion of a specific crime type relative to the total crimes reported in that district for the given year.</p>
 <p>In practice, the crime rate for each district and year is calculated using the following R code:</p>
 <div class="cell">
@@ -374,6 +360,7 @@ window.Quarto = {
 <li><p><strong>tmap</strong>: For map visualization.</p></li>
 <li><p><strong>spdep</strong>: For spatial dependence analysis and creating neighbors lists.</p></li>
 <li><p><strong>skater-helper</strong>: A custom helper script for running spatial clustering with SKATER.</p></li>
+<li><p><strong>heatmaply</strong>: A package that helps to plot heatmaps.</p></li>
 </ul>
 <hr>
 </section>
