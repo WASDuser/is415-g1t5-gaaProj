@@ -107,15 +107,15 @@ function(input, output, session) {
             color <- "#428bca"
             
             if (input$chart_type == "Bar Chart") {
-                ggplot(crime_merged_sf, aes(x = crime_merged_sf[[input$variable]])) + geom_bar(fill=color) + 
+                ggplot(crime_merged_sf, aes(x = .data[[input$variable]])) + geom_bar(fill=color) + 
                     theme(axis.text.x = element_text(angle = 30))
                 
             } else if (input$chart_type == "Histogram") {
-                ggplot(crime_merged_sf, aes(x = .crime_merged_sf[[input$variable]])) + 
+                ggplot(crime_merged_sf, aes(x = .data[[input$variable]])) + 
                     geom_histogram(binwidth = 5, color="black", fill=color)
                 
             } else if (input$chart_type == "Boxplot") {
-                ggplot(crime_merged_sf, aes(y = .crime_merged_sf[[input$variable]])) + geom_boxplot(fill=color)
+                ggplot(crime_merged_sf, aes(y = .data[[input$variable]])) + geom_boxplot(fill=color)
                 
             }
         })})
