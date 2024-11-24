@@ -11,7 +11,7 @@ website:
         text: Poster
       - href: 'guide/guide.qmd'
         text: User Guide
-      - href: 'https://williamtjw.shinyapps.io/shinyGeode/'
+      - href: 'https://williamtjw.shinyapps.io/Geo-PEACE/'
         text: Shiny App
    
 format:
