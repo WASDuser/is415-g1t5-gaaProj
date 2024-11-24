@@ -131,15 +131,6 @@ function(input, output, session) {
     
     # ------------------------------ CHORO ------------------------------
     
-    # Dyanmic time period options - choro
-    observe({
-      load_data()
-      years <- unique(year(crime_merged_sf$date.y))
-      
-      updateSelectInput(session, 'time_period',
-        choices = years,
-        selected = years[1])
-    })
     
     # Choloropleth output
     choropleth_map <- eventReactive(input$submit_esda,{
@@ -189,98 +180,11 @@ function(input, output, session) {
       HTML(description_text)
     })
     
-    
-    # Dynamic crime type options
-    observe({
-        load_data()
-        crime_types <- unique(crime_merged_sf$type)
-        
-        updateSelectInput(session, "crime_type",
-            choices = crime_types,
-            selected = crime_types[1])
-    })
-    
-    
-    # Dynamic colors
-    observe({
-      c_palette <- list(
-        "blues" = "Blues", 
-        "reds" = "Reds", 
-        "greens" = "Greens",
-        "Yellow-Orange-Red" = "YlOrRd",
-        "Yellow-Orange-Brown" = "YlOrBr",
-        "Yellow-Green" = "YlGn",
-        "Orange-Red" = "OrRd")
-      
-      updateSelectInput(session, 'colors',
-        choices = c_palette,
-        selected = c_palette[1])
-    })
-    
-    
-    # Dynamic region options
-    observe({
-      load_data()
-      regions <- unique(crime_merged_sf$region)
-      
-      updateSelectInput(session, "region",
-        choices = regions,
-        selected = regions[1])
-    })
-    
-    
-    # Dyanmic classification options
-    observe({
-      styles <- list(
-        "sd" = "sd", 
-        "equal" = "equal", 
-        "pretty" = "pretty", 
-        "quantile" = "quantile", 
-        "kmeans" = "kmeans", 
-        "hclust" = "hclust", 
-        "bclust" = "bclust", 
-        "fisher" = "fisher", 
-        "jenks" = "jenks",
-        "cont" = "cont",
-        "order" = "order",
-        "log10" = "log10") # TODO: handle log(0) error
-      
-      updateSelectInput(session, 'classification',
-        choices = styles,
-        selected = styles[1])
-    })
     # ------------------------------ END OF CHORO ------------------------------
     
     # ------------------------------ GLOBAL PARAMS ------------------------------
     # Dynamic crime type options - global
-    observe({
-      load_data()
-      crime_types <- unique(crime_merged_sf$type)
-      
-      updateSelectInput(session, "global_crime_type",
-        choices = crime_types,
-        selected = crime_types[1])
-    })
-    
-    # Dynamic region options - global
-    observe({
-      load_data()
-      regions <- unique(crime_merged_sf$region)
-      
-      updateSelectInput(session, "global_region",
-        choices = regions,
-        selected = regions[1])
-    })
-    
-    # Dyanmic time period options - global
-    observe({
-      load_data()
-      years <- unique(year(crime_merged_sf$date.y))
-      
-      updateSelectInput(session, 'global_time_period',
-        choices = years,
-        selected = years[1])
-    })
+
     # ------------------------------ END OF GLOBAL PARAMS ------------------------------
     
     # ------------------------------ END OF GLOBAL OUTPUT ------------------------------
@@ -301,7 +205,8 @@ function(input, output, session) {
         
         # credit to santhya
         # this is to langkawi, which is not connected to the others by admin boundary
-        nb[17]<- as.integer(19)
+        nb[17]<- as.integer(64)
+        nb[69] <- append(nb[69], as.integer(68))
 
         wm_q <- crime_merged_sf %>%
             mutate(
@@ -358,34 +263,6 @@ function(input, output, session) {
     
     # ------------------------------ LOCAL PARAMS ------------------------------
     # Dynamic crime type options - local
-    observe({
-      load_data()
-      crime_types <- unique(crime_merged_sf$type)
-      
-      updateSelectInput(session, "local_crime_type",
-        choices = crime_types,
-        selected = crime_types[1])
-    })
-    
-    # Dynamic region options - local
-    observe({
-      load_data()
-      regions <- unique(crime_merged_sf$region)
-      
-      updateSelectInput(session, "local_region",
-        choices = regions,
-        selected = regions[1])
-    })
-    
-    # Dyanmic time period options - local
-    observe({
-      load_data()
-      years <- unique(year(crime_merged_sf$date.y))
-      
-      updateSelectInput(session, 'local_time_period',
-        choices = years,
-        selected = years[1])
-    })
     # ------------------------------ END OF LOCAL PARAMS ------------------------------
     
     # ------------------------------ LOCAL OUTPUT ------------------------------
@@ -406,7 +283,8 @@ function(input, output, session) {
         
         nb <- st_contiguity(crime_merged_sf$geometry, queen = as.logical(input$Contiguity))
         
-        nb[17]<- as.integer(19)
+        nb[17]<- as.integer(64)
+        nb[69] <- append(nb[69], as.integer(68))
         
         wm_q <- crime_merged_sf %>%
             mutate(
@@ -478,6 +356,7 @@ function(input, output, session) {
       HTML(description_text)
     })
     # ------------------------------ END OF LOCAL OUTPUT ------------------------------
+    
     
     # ------------------------------ HCLUST ------------------------------
     hclust_params <- eventReactive(input$HclustPlots, {
@@ -611,22 +490,7 @@ function(input, output, session) {
     # ------------------------------ END OF HCLUST ------------------------------
     
     # ------------------------------ CLUSTGEO ------------------------------
-    observe({
-      dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
-      updateSelectInput(session, 'clustGeo_method',
-                        choices = dist_methods,
-                        selected = dist_methods[1])
-    })
     
-    
-    observe({
-      load_data()
-      years <- unique(year(crime_merged_sf$date.y))
-      
-      updateSelectInput(session, 'clustgeo_time_period',
-        choices = years,
-        selected = years[1])
-    })
     
     
     observeEvent(input$run_clustGeo, {
@@ -683,34 +547,6 @@ function(input, output, session) {
     # ------------------------------ END OF CLUSTGEO ------------------------------
     
     # ------------------------------ SKATER ------------------------------
-    
-    # Dyanmic time period options - skater
-    observe({
-      load_data()
-      years <- unique(year(crime_merged_sf$date.y))
-      
-      updateSelectInput(session, 'skater_time_period',
-        choices = years,
-        selected = years[1])
-    })
-    
-    # Dynamic region options - skater
-    observe({
-      load_data()
-      regions <- unique(crime_merged_sf$region)
-      
-      updateSelectInput(session, "skater_region",
-        choices = regions,
-        selected = regions[1])
-    })
-
-    # Dyanmic methods - SKATER
-    observe({
-        dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
-        updateSelectInput(session, 'skater_method',
-            choices = dist_methods,
-            selected = dist_methods[1])
-    })
     
     observeEvent(input$run_skater,{
         print('---------- start ----------')

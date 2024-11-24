@@ -73,8 +73,15 @@ navbarPage(
                     
                     actionButton("submit_esda", "Generate Choropleth"),hr(),
                     selectInput("time_period", "Select Year:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("2016" = "2016",
+                                               "2017" = "2017",
+                                               "2018" = "2018",
+                                               "2019" = "2019",
+                                               "2020" = "2020",
+                                               "2021" = "2021",
+                                               "2022" = "2022",
+                                               "2023" = "2023"),
+                                selected = "2020"),
                     
                     selectInput("esda_variable", "Select Variable for Choropleth:",
                         choices = list(
@@ -83,16 +90,31 @@ navbarPage(
                         )),
                     
                     selectInput("crime_type", "Select Crime Type:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Causing Injury" = "causing_injury",
+                                               "Murder" = "murder",
+                                               "Rape" = "rape",
+                                               "Armed Gang Robber" = "robbery_gang_armed",
+                                               "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                               "Armed Solo Robbery" = "robbery_solo_armed",
+                                               "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                                selected = "causing_injury"),
                     
                     selectInput("region", "Select Region:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Peninsular" = "Peninsular",
+                                               "East" = "East"),
+                                selected = "Peninsular"),
                     
                     selectInput("classification", "Select Classification option:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("sd" = "sd", 
+                                               "Equal" = "equal", 
+                                               "Pretty" = "pretty", 
+                                               "Quantile" = "quantile", 
+                                               "K-means" = "kmeans", 
+                                               "Hclust" = "hclust", 
+                                               "Bclust" = "bclust", 
+                                               "Fisher" = "fisher", 
+                                               "Jenks" = "jenks"),
+                                selected = "pretty"),
                     
                     tags$small("*log methods do not work if there are NULL values"),
                     tags$br(),
@@ -105,8 +127,15 @@ navbarPage(
                         min = 3, max = 10, value = c(5)),
                     
                     selectInput("colors", "Color Palette:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Blues" = "Blues", 
+                                               "Reds" = "Reds", 
+                                               "Greens" = "Greens",
+                                               "Yellow-Orange-Red" = "YlOrRd",
+                                               "Yellow-Orange-Brown" = "YlOrBr",
+                                               "Yellow-Green" = "YlGn",
+                                               "Orange-Red" = "OrRd",
+                                               "Purples" = "Purples"),
+                                selected = "Blues"),
                 ),
                 
                 
@@ -116,16 +145,30 @@ navbarPage(
                     actionButton("submit_global", "Generate Plot"), hr(),
                     
                     selectInput("global_time_period", "Select year:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("2016" = "2016",
+                                               "2017" = "2017",
+                                               "2018" = "2018",
+                                               "2019" = "2019",
+                                               "2020" = "2020",
+                                               "2021" = "2021",
+                                               "2022" = "2022",
+                                               "2023" = "2023"),
+                                selected = "2020"),
                     
                     selectInput("global_crime_type", "Select Crime Type:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Causing Injury" = "causing_injury",
+                                               "Murder" = "murder",
+                                               "Rape" = "rape",
+                                               "Armed Gang Robber" = "robbery_gang_armed",
+                                               "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                               "Armed Solo Robbery" = "robbery_solo_armed",
+                                               "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                                selected = "causing_injury"),
                     
                     selectInput("global_region", "Select Region:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Peninsular" = "Peninsular",
+                                               "East" = "East"),
+                                selected = "Peninsular"),
                     
                     radioButtons("global_contiguity", "Contiguity Method:",
                         choices = c(
@@ -155,16 +198,30 @@ navbarPage(
                     actionButton("MoranUpdate", "Update Plot"),hr(),
                     
                     selectInput("local_time_period", "Select year:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("2016" = "2016",
+                                               "2017" = "2017",
+                                               "2018" = "2018",
+                                               "2019" = "2019",
+                                               "2020" = "2020",
+                                               "2021" = "2021",
+                                               "2022" = "2022",
+                                               "2023" = "2023"),
+                                selected = "2020"),
                     
                     selectInput("local_crime_type", "Select Crime Type:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Causing Injury" = "causing_injury",
+                                               "Murder" = "murder",
+                                               "Rape" = "rape",
+                                               "Armed Gang Robber" = "robbery_gang_armed",
+                                               "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                               "Armed Solo Robbery" = "robbery_solo_armed",
+                                               "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                                selected = "causing_injury"),
                     
                     selectInput("local_region", "Select Region:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Peninsular" = "Peninsular",
+                                               "East" = "East"),
+                                selected = "Peninsular"),
                     
                     radioButtons("Contiguity", "Contiguity Method:",
                         choices = c(
@@ -214,6 +271,8 @@ navbarPage(
                 
                 
             ),
+            
+            
             mainPanel(
                 tabsetPanel(id='tabs',
                     
@@ -347,6 +406,7 @@ navbarPage(
                
         tabPanel('clustGEO',
             sidebarLayout(
+              
               sidebarPanel(
                 
                 selectInput(inputId = "clustGeo_region",
@@ -355,13 +415,26 @@ navbarPage(
                                            "East" = "East"),
                             selected = "Peninsular"),
                   
-                  selectInput("clustgeo_time_period", "Select year:",
-                      choices = NULL,
-                      selected = NULL),
+                selectInput("clustgeo_time_period", "Select year:",
+                            choices = list("2016" = "2016",
+                                           "2017" = "2017",
+                                           "2018" = "2018",
+                                           "2019" = "2019",
+                                           "2020" = "2020",
+                                           "2021" = "2021",
+                                           "2022" = "2022",
+                                           "2023" = "2023"),
+                            selected = "2020"),
                 
                 selectInput("clustGeo_method", "Select Distance Method:",
-                            choices = NULL,
-                            selected = NULL),
+                            
+                            choices = list("Euclidean" = "euclidean",
+                                           "Maximum" = "maximum",
+                                           "Manhattan" = "manhattan",
+                                           "Canberra" = "canberra",
+                                           "Binary" = "binary",
+                                           "Minkowski" = "minkowski"),
+                            selected = "euclidean"),
                 
                 sliderInput(inputId = "nClust", 
                             label = "Number of Clusters", 
@@ -382,20 +455,34 @@ navbarPage(
                 )
               )
             )),
+        
         tabPanel('SKATER',
             sidebarLayout(
                 sidebarPanel(
                     selectInput("skater_region", "Select Region:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Peninsular" = "Peninsular",
+                                               "East" = "East"),
+                                selected = "Peninsular"),
                     
                     selectInput("skater_time_period", "Select year:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("2016" = "2016",
+                                               "2017" = "2017",
+                                               "2018" = "2018",
+                                               "2019" = "2019",
+                                               "2020" = "2020",
+                                               "2021" = "2021",
+                                               "2022" = "2022",
+                                               "2023" = "2023"),
+                                selected = "2020"),
                     
                     selectInput("skater_method", "Select Distance Method:",
-                        choices = NULL,
-                        selected = NULL),
+                                choices = list("Euclidean" = "euclidean",
+                                               "Maximum" = "maximum",
+                                               "Manhattan" = "manhattan",
+                                               "Canberra" = "canberra",
+                                               "Binary" = "binary",
+                                               "Minkowski" = "minkowski"),
+                                selected = "euclidean"),
                     
                     numericInput("n_clusters", "Number of Clusters (k):", value = 6, min = 2, max = 10),
                     
@@ -407,5 +494,4 @@ navbarPage(
                     uiOutput("skater_desc"),
                 )
             ))
-        )
-    )
+        ))

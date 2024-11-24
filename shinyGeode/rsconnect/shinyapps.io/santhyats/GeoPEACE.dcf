@@ -1,0 +1,12 @@
+name: GeoPEACE
+title: GeoPEACE
+username: santhyats
+account: santhyats
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13435700
+bundleId: 9408797
+url: https://santhyats.shinyapps.io/GeoPEACE/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
