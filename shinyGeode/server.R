@@ -303,7 +303,7 @@ function(input, output, session) {
         # this is to langkawi, which is not connected to the others by admin boundary
         nb[17]<- as.integer(19)
 
-        wm_q <- data %>%
+        wm_q <- crime_merged_sf %>%
             mutate(
                 nb = nb,
                 wt = st_weights(nb, style = input$global_MoranWeights))
