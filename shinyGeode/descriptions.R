@@ -43,10 +43,10 @@ descriptions <- list(
     <b>Histogram</b>
     <br>A histogram is a graphical representation of the distribution of numerical data. It groups data into bins or intervals, allowing for the visualization of frequency distributions and data spread.
   ",
-  choropleth_desc = "choropleth",
-  global_desc = "global",
-  local_desc = "local",
-  hclust_desc = "hclust",
-  clustgeo_desc = "clustgeo",
-  skater_desc = "skater"
+  choropleth_desc = "",
+  global_desc = "",
+  local_desc = "",
+  hclust_desc = "",
+  clustgeo_desc = "",
+  skater_desc = ""
 )

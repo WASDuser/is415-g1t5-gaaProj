@@ -4,21 +4,6 @@ source('clustgeo_helper.R')
 
 function(input, output, session) {
     # ------------------------------ DATA ------------------------------
-    # dataset_reactive <- reactive({
-    #     req(input$dataset)
-    #     data <- switch(input$dataset,
-    #         "crime_merged_sf" = crime_merged_sf)
-    #     data
-    # })
-    # 
-    # 
-    # esda_dataset_reactive <- reactive({
-    #     req(input$esda_dataset)
-    #     data <- switch(input$esda_dataset,
-    #         "crime_merged_sf" = crime_merged_sf)
-    #     data
-    # })
-    
     
     # Preview the dataset with up to 20 rows (when "Preview" is selected)
     output$data_table <- DT::renderDataTable({
@@ -108,9 +93,6 @@ function(input, output, session) {
         updateSelectInput(session, "chart_type", choices = if (input$var_type == "cat") {
             c("Bar Chart")
         } else {
-            # [FIX] - time-series plot
-            # c("Histogram", "Boxplot", "Time Series")
-            
             c("Histogram", "Boxplot")
         })
     })
@@ -136,16 +118,6 @@ function(input, output, session) {
                 ggplot(data, aes(y = .data[[input$variable]])) + geom_boxplot(fill=color)
                 
             }
-            # [FIX] - time-series plot
-            # else if (input$chart_type == "Time Series") {
-            #     data$date.y <- as.Date(data$date.y)
-            #     data <- data %>% 
-            #         group_by(date.y) %>% 
-            #         summarise(value = mean(.data[[input$variable]], na.rm = TRUE))
-            #     
-            #     ggplot(data, aes(x = date.y, y = value)) + 
-            #         geom_line()
-            # }
         })})
     
     
@@ -156,6 +128,8 @@ function(input, output, session) {
     })
     
     # ------------------------------ END OF EDA ------------------------------
+    
+    # ------------------------------ CHORO ------------------------------
     
     # Dyanmic time period options - choro
     observe({
@@ -189,24 +163,6 @@ function(input, output, session) {
         filter(region == chosen_region) %>% 
         filter(year == chosen_year) %>% 
         filter(type == chosen_crime)
-      
-      # for debugging ---------------------------------------------------
-      print(chosen_data)
-      print('---------------------------------------------------------------')
-      print(chosen_var)
-      print('---------------------------------------------------------------')
-      print(chosen_crime)
-      print('---------------------------------------------------------------')
-      print(chosen_region)
-      print('---------------------------------------------------------------')
-      print(chosen_class)
-      print('---------------------------------------------------------------')
-      print(chosen_n)
-      print('---------------------------------------------------------------')
-      print(chosen_color)
-      print('---------------------------------------------------------------')
-      
-      str(data)
       
       tmap_mode('view')
       tmap_options(check.and.fix = TRUE)
@@ -260,111 +216,72 @@ function(input, output, session) {
     })
     
     
-    # Dynamic crime type options - local
-    observe({
-        data <- crime_merged_sf
-        crime_types <- unique(data$type)
-        
-        updateSelectInput(session, "local_crime_type",
-            choices = crime_types,
-            selected = crime_types[1])
-    })
-    
-    
-    # Dynamic crime type options - global
-    observe({
-        data <- crime_merged_sf
-        crime_types <- unique(data$type)
-        
-        updateSelectInput(session, "global_crime_type",
-            choices = crime_types,
-            selected = crime_types[1])
-    })
-    
-    
     # Dynamic region options
     observe({
-        data <- crime_merged_sf
-        regions <- unique(data$region)
-        
-        updateSelectInput(session, "region",
-            choices = regions,
-            selected = regions[1])
-    })
-    
-    
-    # Dynamic region options - local
-    observe({
-        data <- crime_merged_sf
-        regions <- unique(data$region)
-        
-        updateSelectInput(session, "local_region",
-            choices = regions,
-            selected = regions[1])
-    })
-    
-    
-    # Dynamic region options - global
-    observe({
-        data <- crime_merged_sf
-        regions <- unique(data$region)
-        
-        updateSelectInput(session, "global_region",
-            choices = regions,
-            selected = regions[1])
+      data <- crime_merged_sf
+      regions <- unique(data$region)
+      
+      updateSelectInput(session, "region",
+        choices = regions,
+        selected = regions[1])
     })
     
     
     # Dyanmic classification options
     observe({
-        styles <- list(
-            "sd" = "sd", 
-            "equal" = "equal", 
-            "pretty" = "pretty", 
-            "quantile" = "quantile", 
-            "kmeans" = "kmeans", 
-            "hclust" = "hclust", 
-            "bclust" = "bclust", 
-            "fisher" = "fisher", 
-            "jenks" = "jenks",
-            "cont" = "cont",
-            "order" = "order",
-            "log10" = "log10") # TODO: handle log(0) error
-        
-        updateSelectInput(session, 'classification',
-            choices = styles,
-            selected = styles[1])
+      styles <- list(
+        "sd" = "sd", 
+        "equal" = "equal", 
+        "pretty" = "pretty", 
+        "quantile" = "quantile", 
+        "kmeans" = "kmeans", 
+        "hclust" = "hclust", 
+        "bclust" = "bclust", 
+        "fisher" = "fisher", 
+        "jenks" = "jenks",
+        "cont" = "cont",
+        "order" = "order",
+        "log10" = "log10") # TODO: handle log(0) error
+      
+      updateSelectInput(session, 'classification',
+        choices = styles,
+        selected = styles[1])
     })
+    # ------------------------------ END OF CHORO ------------------------------
     
-    
-    # Dyanmic time period options - local
+    # ------------------------------ GLOBAL PARAMS ------------------------------
+    # Dynamic crime type options - global
     observe({
-        data <- crime_merged_sf
-        
-        if ("date.y" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.y))
-        } else{years <- unique(year(data$date))}
-        
-        updateSelectInput(session, 'local_time_period',
-            choices = years,
-            selected = years[1])
+      data <- crime_merged_sf
+      crime_types <- unique(data$type)
+      
+      updateSelectInput(session, "global_crime_type",
+        choices = crime_types,
+        selected = crime_types[1])
     })
     
+    # Dynamic region options - global
+    observe({
+      data <- crime_merged_sf
+      regions <- unique(data$region)
+      
+      updateSelectInput(session, "global_region",
+        choices = regions,
+        selected = regions[1])
+    })
     
     # Dyanmic time period options - global
     observe({
-        data <- crime_merged_sf
-        
-        if ("date.y" %in% colnames(data)){ # hardcode
-            years <- unique(year(data$date.y))
-        } else{years <- unique(year(data$date))}
-        
-        updateSelectInput(session, 'global_time_period',
-            choices = years,
-            selected = years[1])
+      data <- crime_merged_sf
+      years <- unique(year(data$date.y))
+      
+      updateSelectInput(session, 'global_time_period',
+        choices = years,
+        selected = years[1])
     })
+    # ------------------------------ END OF GLOBAL PARAMS ------------------------------
     
-    
+    # ------------------------------ END OF GLOBAL OUTPUT ------------------------------
     # Global Moran I - table
     globalMIResults <- eventReactive(input$submit_global,{
         chosen_crime <- input$global_crime_type
@@ -374,20 +291,14 @@ function(input, output, session) {
         data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>% 
             filter(region == chosen_region) %>% 
             filter(type == chosen_crime) %>% 
-            # missing data if any
             filter(!is.na(crime_rate))
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$global_contiguity))
         
-        # thanks to santhya~
-        nb[17]<- as.integer(19) #handle case for langkawi, which is not connected to the others by admin boundary
-        
-        # empty nb indices
-        # crime_boundary: 17, 63
-        # west: 17
-        # east: 20
-        
-        # Computing Contiguity Spatial Weights
+        # credit to santhya
+        # this is to langkawi, which is not connected to the others by admin boundary
+        nb[17]<- as.integer(19)
+
         wm_q <- data %>%
             mutate(
                 nb = nb,
@@ -433,13 +344,47 @@ function(input, output, session) {
     output$global_hist <- renderPlot({
         globalHist()
     })
+    
     # global desc
     output$global_desc <- renderText({
       description_text <- descriptions[['global_desc']]
       HTML(description_text)
     })
+    # ------------------------------ END OF GLOBAL OUTPUT ------------------------------
     
+    # ------------------------------ LOCAL PARAMS ------------------------------
+    # Dynamic crime type options - local
+    observe({
+      data <- crime_merged_sf
+      crime_types <- unique(data$type)
+      
+      updateSelectInput(session, "local_crime_type",
+        choices = crime_types,
+        selected = crime_types[1])
+    })
     
+    # Dynamic region options - local
+    observe({
+      data <- crime_merged_sf
+      regions <- unique(data$region)
+      
+      updateSelectInput(session, "local_region",
+        choices = regions,
+        selected = regions[1])
+    })
+    
+    # Dyanmic time period options - local
+    observe({
+      data <- crime_merged_sf
+      years <- unique(year(data$date.y))
+      
+      updateSelectInput(session, 'local_time_period',
+        choices = years,
+        selected = years[1])
+    })
+    # ------------------------------ END OF LOCAL PARAMS ------------------------------
+    
+    # ------------------------------ LOCAL OUTPUT ------------------------------
     # LISA
     localMIResults <- eventReactive(input$MoranUpdate,{
         
@@ -450,30 +395,18 @@ function(input, output, session) {
         data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>% 
             filter(region == chosen_region) %>% 
             filter(type == chosen_crime) %>% 
-            # missing data if any
             filter(!is.na(crime_rate))
-        
-        if ("date.y" %in% colnames(data)){ # hardcode
-            data <- data %>% filter(year(data$date.y) == chosen_year)
-        } else{data <- data %>% filter(year(data$date) == chosen_year)}
+
+        data <- data %>% filter(year(data$date.y) == chosen_year)
         
         nb <- st_contiguity(data$geometry, queen = as.logical(input$Contiguity))
         
-        # thanks to santhya~
-        nb[17]<- as.integer(19) #handle case for langkawi, which is not connected to the others by admin boundary
+        nb[17]<- as.integer(19)
         
-        # empty nb indices
-        # crime_boundary: 17, 63
-        # west: 17
-        # east: 20
-        
-        # Computing Contiguity Spatial Weights
         wm_q <- data %>%
             mutate(
                 nb = nb,
                 wt = st_weights(nb, style = input$MoranWeights))
-        
-        # Computing Local Moran's I
         
         lisa <- wm_q %>%
             mutate(
@@ -489,11 +422,7 @@ function(input, output, session) {
                 "local moran(ii)" = "ii", "expectation(eii)" = "eii",
                 "variance(var_ii)" = "var_ii", "std deviation(z_ii)" = "z_ii",
                 "p_value" = "p_ii")
-        
-        # glimpse(data)
-        # View(nb)
-        # View(wm_q)
-        # View(lisa)
+
         return(lisa)
     })
     
@@ -501,9 +430,9 @@ function(input, output, session) {
     output$LocalMoranMap <- renderTmap({
         df <- localMIResults()
         
-        if(is.null(df) || nrow(df) == 0) return()  # Exit if no data
+        # debugging - if empty data
+        # if(is.null(df) || nrow(df) == 0) return()
         
-        # Map creation using tmap
         localMI_map <- tm_shape(df) +
             tm_fill(col = input$localmoranstats,
                 style = "pretty",
@@ -543,11 +472,9 @@ function(input, output, session) {
       description_text <- descriptions[['local_desc']]
       HTML(description_text)
     })
+    # ------------------------------ END OF LOCAL OUTPUT ------------------------------
     
-    #========================#
-    ##### Render Hclust ######
-    #========================#
-    
+    # ------------------------------ HCLUST ------------------------------
     hclust_params <- eventReactive(input$HclustPlots, {
       list(
         proxMethod = input$proxMethod,
@@ -557,7 +484,6 @@ function(input, output, session) {
         optimalClust = input$optimalClust
       )
     })
-    
     
     dendogram <- eventReactive(input$HclustPlots, {
       params <- hclust_params()
@@ -593,8 +519,6 @@ function(input, output, session) {
                   k = params$optimalClust, 
                   border = 2:5)
     })
-    
-    
     
     heatmap<-eventReactive(input$HclustPlots,{
       
@@ -696,15 +620,9 @@ function(input, output, session) {
       HTML(description_text)
     })
     
+    # ------------------------------ END OF HCLUST ------------------------------
     
-#----------------------------------------------------------------------------------------------------------
-    #ClustGeo
-    # clustGeo_dataset_reactive <- reactive({
-    #   req(input$clustGeo_dataset)
-    #   data <- switch(input$clustGeo_dataset,
-    #                  "crime_merged_sf" = crime_merged_sf)
-    # })
-    
+    # ------------------------------ CLUSTGEO ------------------------------
     observe({
       dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
       updateSelectInput(session, 'clustGeo_method',
@@ -774,9 +692,9 @@ function(input, output, session) {
       
     })
     
-#-----------------------------------------------------------------------------------------------------------
+    # ------------------------------ END OF CLUSTGEO ------------------------------
     
-    # SKATER
+    # ------------------------------ SKATER ------------------------------
     skater_dataset_reactive <- reactive({
         req(input$skater_dataset)
         data <- switch(input$skater_dataset,
@@ -841,5 +759,5 @@ function(input, output, session) {
       description_text <- descriptions[['skater_desc']]
       HTML(description_text)
     })
-    
+    # ------------------------------ END OF SKATER ------------------------------
 }
