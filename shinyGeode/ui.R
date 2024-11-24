@@ -452,7 +452,8 @@ navbarPage(
                             tabPanel("ChoiceAlpha Graph", value = 'choicealphaTab',
                                      plotlyOutput("choicealpha")
                             )
-                )
+                ),
+                  uiOutput("clustgeo_desc"),
               )
             )),
         

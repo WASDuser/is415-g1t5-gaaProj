@@ -45,8 +45,8 @@ descriptions <- list(
   ",
   choropleth_desc = "",
   global_desc = "",
-  local_desc = "",
-  hclust_desc = "",
-  clustgeo_desc = "",
-  skater_desc = ""
+  local_desc = "*output does not show for years before 2020, and for the EAST region",
+  hclust_desc = "*despite optimisation attempts, all 3 clustering tabs may cause application to crash due to memory usage",
+  clustgeo_desc = "*despite optimisation attempts, all 3 clustering tabs may cause application to crash due to memory usage<br><br>*may take a couple minutes to load",
+  skater_desc = "*despite optimisation attempts, all 3 clustering tabs may cause application to crash due to memory usage"
 )

@@ -544,6 +544,10 @@ function(input, output, session) {
       
     })
     
+    output$clustgeo_desc <- renderText({
+      description_text <- descriptions[['clustgeo_desc']]
+      HTML(description_text)
+    })
     # ------------------------------ END OF CLUSTGEO ------------------------------
     
     # ------------------------------ SKATER ------------------------------
