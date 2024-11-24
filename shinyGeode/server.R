@@ -219,17 +219,6 @@ function(input, output, session) {
       HTML(description_text)
     })
     
-    # Dynamic choro var options
-    observe({
-        data <- crime_merged_sf
-        numeric_cols <- names(data)[sapply(data, is.numeric)]
-        
-        updateSelectInput(session, "esda_variable", 
-            choices = numeric_cols,
-            selected = numeric_cols[1]  # Set a default selection
-        )
-    })
-    
     
     # Dynamic crime type options
     observe({
