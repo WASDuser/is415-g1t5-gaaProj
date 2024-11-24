@@ -8,13 +8,13 @@ navbarPage(
     tabPanel('Data',
         sidebarLayout(
             sidebarPanel(
-                # selectInput("dataset", "Choose Dataset:",
+                # selectInput("dataset", "Select Dataset:",
                 #     choices = list(
                 #         "crime_merged_sf" = "crime_merged_sf"
                 #     )),
                 
                 
-                radioButtons("display_option", "Display options for working dataset (crime_merged_sf):",
+                radioButtons("display_option", "Select display option for crime_merged_sf):",
                     choices = list(
                         "Preview" = "preview",
                         "str()" = "str",
@@ -41,23 +41,23 @@ navbarPage(
     tabPanel('EDA',
         sidebarLayout(
             sidebarPanel(
-                # selectInput("esda_dataset", "Choose Dataset:",
+                # selectInput("esda_dataset", "Select Dataset:",
                 #     choices = list(
                 #         "crime_merged_sf" = "crime_merged_sf"
                 #     )),
                 
-                selectInput("var_type", "Variable Type:",
+                selectInput("var_type", "Select Variable Type:",
                     choices = list(
                         "Categorical" = "cat",
                         "Continuous" = "cont")),
                 
                 uiOutput("var_select"),
                 
-                selectInput("chart_type", "Chart Type:",
+                selectInput("chart_type", "Select Chart Type:",
                     choices = NULL,
                     selected = NULL),
                 
-                actionButton("submit_eda", "Generate Plot")),
+                actionButton("submit_eda", "Generate Chart")),
             
             mainPanel(
                 conditionalPanel(
@@ -82,9 +82,9 @@ navbarPage(
                 conditionalPanel(
                     condition="input.tabs=='choroTab'", h3("Choropleth settings"),
                     
-                    actionButton("submit_esda", "Generate Map"),hr(),
+                    actionButton("submit_esda", "Generate Choropleth"),hr(),
                     
-                    # selectInput("esda_dataset", "Choose Dataset:", 
+                    # selectInput("esda_dataset", "Select Dataset:", 
                     #     choices = list(
                     #         "crime_merged_sf" = "crime_merged_sf"
                     #     )),
@@ -93,19 +93,19 @@ navbarPage(
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("crime_type", "Select type of crime:",
+                    selectInput("crime_type", "Select Crime Type:",
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("region", "Select region:",
+                    selectInput("region", "Select Region:",
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("classification", "Classification option:",
+                    selectInput("classification", "Select Classification option:",
                         choices = NULL,
                         selected = NULL),
                     
-                    tags$small("*log methods current do not work with NULL values"),
+                    tags$small("*log methods do not work if there are NULL values"),
                     tags$br(),
                     tags$small("*continuous: cont,order,log"),
                     tags$br(),
@@ -124,10 +124,10 @@ navbarPage(
                 conditionalPanel(
                     condition="input.tabs=='globalTab'", h3("Global settings"),
                     
-                    actionButton("submit_global", "Update Plot"), hr(),
+                    actionButton("submit_global", "Generate Plot"), hr(),
                     
                     # tags$small("*only west works for now*"),
-                    # selectInput("esda_dataset", "Choose Dataset:",
+                    # selectInput("esda_dataset", "Select Dataset:",
                     #     choices = list(
                     #         "crime_merged_sf" = "crime_merged_sf"
                     #     )),
@@ -136,11 +136,11 @@ navbarPage(
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("global_crime_type", "Select type of crime:",
+                    selectInput("global_crime_type", "Select Crime Type:",
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("global_region", "Select region:",
+                    selectInput("global_region", "Select Region:",
                         choices = NULL,
                         selected = NULL),
                     
@@ -172,7 +172,7 @@ navbarPage(
                     actionButton("MoranUpdate", "Update Plot"),hr(),
                     
                     # tags$small("*only west works for now*"),
-                    # selectInput("esda_dataset", "Choose Dataset:", 
+                    # selectInput("esda_dataset", "Select Dataset:", 
                     #     choices = list(
                     #         "crime_merged_sf" = "crime_merged_sf"
                     #     )),
@@ -181,11 +181,11 @@ navbarPage(
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("local_crime_type", "Select type of crime:",
+                    selectInput("local_crime_type", "Select Crime Type:",
                         choices = NULL,
                         selected = NULL),
                     
-                    selectInput("local_region", "Select region:",
+                    selectInput("local_region", "Select Region:",
                         choices = NULL,
                         selected = NULL),
                     
@@ -374,17 +374,21 @@ navbarPage(
             sidebarLayout(
               sidebarPanel(
                 # Input: Select dataset
-                #selectInput("clustGeo_dataset", "Choose Dataset:",
+                #selectInput("clustGeo_dataset", "Select Dataset:",
                             #choices = list("crime_merged_sf" = "crime_merged_sf")),
                 
                 selectInput(inputId = "clustGeo_region",
-                            label = "Region",
+                            label = "Select Region",
                             choices = list("Peninsular" = "Peninsular",
                                            "East" = "East"),
                             selected = "Peninsular"),
+                  
+                  selectInput("clustgeo_time_period", "Select year:",
+                      choices = NULL,
+                      selected = NULL),
                 
-                # Input: Select distance method
-                selectInput("clustGeo_method", "Choose distance method:",
+                # Input: Select Distance Method
+                selectInput("clustGeo_method", "Select Distance Method:",
                             choices = NULL,
                             selected = NULL),
                 
@@ -412,9 +416,9 @@ navbarPage(
             sidebarLayout(
                 sidebarPanel(
                     # Input: Select dataset
-                    # selectInput("skater_dataset", "Choose Dataset:",
+                    # selectInput("skater_dataset", "Select Dataset:",
                     #     choices = list("crime_merged_sf" = "crime_merged_sf")),
-                    selectInput("skater_region", "Select region:",
+                    selectInput("skater_region", "Select Region:",
                         choices = NULL,
                         selected = NULL),
                     
@@ -422,8 +426,8 @@ navbarPage(
                         choices = NULL,
                         selected = NULL),
                     
-                    # Input: Select distance method
-                    selectInput("skater_method", "Choose distance method:",
+                    # Input: Select Distance Method
+                    selectInput("skater_method", "Select Distance Method:",
                         choices = NULL,
                         selected = NULL),
                     

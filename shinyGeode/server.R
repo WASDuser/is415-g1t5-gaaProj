@@ -1,22 +1,23 @@
 source("descriptions.R")
 source('skater_helper.R')
+source('clustgeo_helper.R')
 
 function(input, output, session) {
     # ------------------------------ DATA ------------------------------
-    dataset_reactive <- reactive({
-        req(input$dataset)
-        data <- switch(input$dataset,
-            "crime_merged_sf" = crime_merged_sf)
-        data
-    })
-    
-    
-    esda_dataset_reactive <- reactive({
-        req(input$esda_dataset)
-        data <- switch(input$esda_dataset,
-            "crime_merged_sf" = crime_merged_sf)
-        data
-    })
+    # dataset_reactive <- reactive({
+    #     req(input$dataset)
+    #     data <- switch(input$dataset,
+    #         "crime_merged_sf" = crime_merged_sf)
+    #     data
+    # })
+    # 
+    # 
+    # esda_dataset_reactive <- reactive({
+    #     req(input$esda_dataset)
+    #     data <- switch(input$esda_dataset,
+    #         "crime_merged_sf" = crime_merged_sf)
+    #     data
+    # })
     
     
     # Preview the dataset with up to 20 rows (when "Preview" is selected)
@@ -697,12 +698,11 @@ function(input, output, session) {
     
 #----------------------------------------------------------------------------------------------------------
     #ClustGeo
-    clustGeo_dataset_reactive <- reactive({
-      req(input$clustGeo_dataset)
-      data <- switch(input$clustGeo_dataset,
-                     "crime_merged_sf" = crime_merged_sf)
-      
-    })
+    # clustGeo_dataset_reactive <- reactive({
+    #   req(input$clustGeo_dataset)
+    #   data <- switch(input$clustGeo_dataset,
+    #                  "crime_merged_sf" = crime_merged_sf)
+    # })
     
     observe({
       dist_methods <- list("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "mahalanobis")
@@ -711,15 +711,24 @@ function(input, output, session) {
                         selected = dist_methods[1])
     })
     
-    source('clustGeo.R')
+    
+    observe({
+      data <- crime_merged_sf
+      years <- unique(year(data$date.y))
+      
+      updateSelectInput(session, 'clustgeo_time_period',
+        choices = years,
+        selected = years[1])
+    })
+    
     
     observeEvent(input$run_clustGeo, {
       req(input$nClust, input$clustGeo_method, input$clustGeo_region)
-      data <- clustGeo_dataset_reactive()
+      data <- crime_merged_sf
       
 
       # Filter dataset by region and year
-      filtered_data <- prep_data(data, yr = 2023, reg = input$clustGeo_region)
+      filtered_data <- prep_data(data, yr = input$clustgeo_time_period, reg = input$clustGeo_region)
       # glimpse(filtered_data)
 
       # Run clustering algorithm

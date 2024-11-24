@@ -9,6 +9,7 @@ prep_data <- function(data, yr, reg){
     return(filtered_data)
 }
 
+# modified from prof code + wrangling process
 run_skater <- function(data, meth, n_clusters){
     attribute_data <- data %>% 
         select(crimes, crime_rate) %>% 
@@ -31,6 +32,7 @@ run_skater <- function(data, meth, n_clusters){
     components <- n.comp.nb(nb)
     distance_matrix <- st_distance(st_centroid(st_geometry(data)))
     
+    # without this nested for loop, there will be sub-graphs
     for (i in 1:(components$nc - 1)) {
       for (j in (i + 1):components$nc) {
         component_i <- which(components$comp.id == i)
@@ -56,7 +58,7 @@ run_skater <- function(data, meth, n_clusters){
 
     groups_mat <- as.matrix(clustN$groups)
     skater_cluster <- cbind(sf_cluster, as.factor(groups_mat)) %>%
-      rename(`Skater_CLUSTER` = `as.factor.groups_mat.`)
+      rename(`CLUSTER` = `as.factor.groups_mat.`)
     
     return(skater_cluster)
 }
