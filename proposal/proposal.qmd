@@ -159,25 +159,27 @@ crime_merged <- crime_merged %>%
 
 -   Data tab
 
-    ![](images/clipboard-1938617395.png){width="333"}
+    ![](images/clipboard-1938617395.png){width="2880"}
 
 -   EDA tab
 
-    ![](images/clipboard-4101132840.png){width="333"}
+    ![](images/clipboard-4101132840.png){width="2880"}
 
-    ![](images/clipboard-2113502027.png){width="333"}
+    ![](images/clipboard-2113502027.png){width="2880"}
 
 -   ESDA tab - 3 subtabs:
 
     -   Choropleth
 
-        ![](images/clipboard-478359954.png){width="333"}
+        ![](images/clipboard-478359954.png){width="2880"}
 
     -   Global
 
-        ![](images/clipboard-447120741.png){width="333"}
+        ![](images/clipboard-447120741.png){width="2880"}
 
     -   Local
+
+        ![](images/clipboard-290278480.png)
 
 -   Clustering
 
@@ -185,22 +187,22 @@ crime_merged <- crime_merged %>%
 
         -   Dendrogram
 
-            ![](images/clipboard-727223031.png){width="333"}
+            ![](images/clipboard-727223031.png){width="2880"}
 
         -   Heatmap
 
-            ![](images/clipboard-1331192005.png){width="333"}
+            ![](images/clipboard-1331192005.png){width="2880"}
 
         -   Map
 
-            ![](images/clipboard-749574364.png){width="333"}
+            ![](images/clipboard-749574364.png){width="2880"}
 
     -   CLUSTGEO
 
         -   Map
 
-            ![](images/clipboard-3846039383.png){width="333"}
+            ![](images/clipboard-3846039383.png){width="2880"}
 
     -   SKATER
 
-        ![](images/clipboard-724337037.png){width="333"}
+        ![](images/clipboard-724337037.png){width="2880"}
