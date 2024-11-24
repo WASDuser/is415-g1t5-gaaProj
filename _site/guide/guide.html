@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Santhya, William, Marcus">
 
-<title>Project Guide[THIS IS A DRAFTTTTTTTTTTTT] – Geo-PEACE</title>
+<title>Project User Guide – Geo-PEACE</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -130,9 +130,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><strong>Overview</strong></a></li>
   <li><a href="#tabs-and-functionalities" id="toc-tabs-and-functionalities" class="nav-link" data-scroll-target="#tabs-and-functionalities"><strong>Tabs and Functionalities</strong></a>
   <ul class="collapse">
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><strong>Data</strong></a></li>
-  <li><a href="#eda-tab" id="toc-eda-tab" class="nav-link" data-scroll-target="#eda-tab"><strong>EDA Tab</strong></a></li>
-  <li><a href="#esda-tab-tbc" id="toc-esda-tab-tbc" class="nav-link" data-scroll-target="#esda-tab-tbc"><strong>ESDA Tab (——————– TBC——————— )</strong></a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><strong>1. Data</strong></a></li>
+  <li><a href="#eda-tab" id="toc-eda-tab" class="nav-link" data-scroll-target="#eda-tab"><strong>2. EDA Tab</strong></a></li>
+  <li><a href="#esda-tab-tbc" id="toc-esda-tab-tbc" class="nav-link" data-scroll-target="#esda-tab-tbc"><strong>3. ESDA Tab (——————– TBC——————— )</strong></a></li>
   <li><a href="#jargon-and-interpretations" id="toc-jargon-and-interpretations" class="nav-link" data-scroll-target="#jargon-and-interpretations"><strong>3. Jargon and Interpretations</strong></a></li>
   <li><a href="#tips-and-best-practices" id="toc-tips-and-best-practices" class="nav-link" data-scroll-target="#tips-and-best-practices"><strong>4. Tips and Best Practices</strong></a></li>
   </ul></li>
@@ -144,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project Guide[THIS IS A DRAFTTTTTTTTTTTT]</h1>
+<h1 class="title">Project User Guide</h1>
 </div>
 
 
@@ -180,8 +180,8 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><p><strong>Data</strong>: View and explore the dataset structure and summaries.</p></li>
 <li><p><strong>EDA (Exploratory Data Analysis)</strong>: Visualize and analyze relationships between variables.</p></li>
-<li><p><strong>ESDA (Exploratory Spatial Data Analysis)</strong>: Perform geospatial analyses and view choropleth maps.</p></li>
-<li><p><strong>Clustering</strong>: Apply clustering techniques using <strong>Hierarchical Cluster Analysis</strong> (abbreviated to <strong><code>hclust</code></strong>), the R package <a href="https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html"><code>ClustGeo</code></a> and the <strong><code>SKATER</code></strong> method of <a href="https://cran.r-project.org/web/packages/spdep/spdep.pdf"><strong><code>spdep</code></strong></a> package</p></li>
+<li><p><strong>ESDA (Exploratory Spatial Data Analysis)</strong>: Perform geospatial analyses and plot choropleth maps that reflect the spatial relationships in the study area.</p>
+<p><strong>Clustering</strong>: Apply clustering techniques using <strong>Hierarchical Cluster Analysis</strong> (abbreviated to <strong><code>hclust</code></strong>), the R package <a href="https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html"><code>ClustGeo</code></a> and the <strong><code>SKATER</code></strong> method of <a href="https://cran.r-project.org/web/packages/spdep/spdep.pdf"><strong><code>spdep</code></strong></a> package.</p></li>
 </ul>
 <section id="working-dataset" class="level4">
 <h4 class="anchored" data-anchor-id="working-dataset">Working Dataset:</h4>
@@ -194,9 +194,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="tabs-and-functionalities" class="level1">
 <h1><strong>Tabs and Functionalities</strong></h1>
 <section id="data" class="level3">
-<h3 class="anchored" data-anchor-id="data"><strong>Data</strong></h3>
+<h3 class="anchored" data-anchor-id="data"><strong>1. Data</strong></h3>
 <ul>
-<li><p><strong>Purpose</strong>: Understand the dataset structure and get an initial overview.</p></li>
+<li><p><strong>Purpose</strong>: Understand the structure of the dataset and get an initial overview.</p></li>
 <li><p><strong>Features</strong>:</p>
 <ol type="1">
 <li><p><strong>Dataset Selection</strong>: Choose the dataset (<code>crime_merged_sf</code>).</p></li>
@@ -220,7 +220,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="eda-tab" class="level3">
-<h3 class="anchored" data-anchor-id="eda-tab"><strong>EDA Tab</strong></h3>
+<h3 class="anchored" data-anchor-id="eda-tab"><strong>2. EDA Tab</strong></h3>
 <ul>
 <li><p><strong>Purpose</strong>: Analyze and visualize categorical or continuous variables.</p></li>
 <li><p><strong>Features</strong>:</p>
@@ -240,7 +240,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="esda-tab-tbc" class="level3">
-<h3 class="anchored" data-anchor-id="esda-tab-tbc"><strong>ESDA Tab (——————– TBC——————— )</strong></h3>
+<h3 class="anchored" data-anchor-id="esda-tab-tbc"><strong>3. ESDA Tab (——————– TBC——————— )</strong></h3>
 <ul>
 <li><p><strong>Purpose</strong>: Conduct spatial analyses and visualize crime data geographically.</p></li>
 <li><p><strong>Features</strong>:</p>
@@ -276,21 +276,38 @@ ul.task-list li input[type="checkbox"] {
 <li><p><strong>SKATER</strong>: Spatial clustering based on graph theory.</p>
 <ul>
 <li><p>Configure the number of clusters (<code>k</code>).</p></li>
-<li><p>Run SKATER and view clusters on a map.</p></li>
-</ul></li>
-<li><p><strong>Hierarchical Clustering (<code>hclust</code>)</strong> (additional tab):</p>
+<li><p>Run SKATER and view clusters on a map.</p>
 <ul>
-<li><p>Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).</p></li>
-<li><p>View dendograms, heatmaps, and spatial cluster maps.</p></li>
-</ul></li>
-<li><p><strong>ClustGeo</strong></p></li>
-</ol></li>
 <li><p><strong>How to Use</strong>:</p>
 <ul>
-<li><p>For <strong>SKATER</strong>: Choose the dataset, distance method, and the number of clusters. Click <strong>Run SKATER</strong> to visualize results.</p></li>
-<li><p>For <strong>hclust</strong>: Select a proximity method, clustering method, and desired number of clusters, then click <strong>Generate Plots</strong>.</p></li>
-<li><p>For <strong>ClustGeo</strong>:</p></li>
+<li>Choose the dataset, distance method, and the number of clusters. Click <strong>Run SKATER</strong> to visualize results.</li>
 </ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Hierarchical Clustering (<code>hclust</code>)</strong>:</p>
+<ul>
+<li><p>Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).</p></li>
+<li><p>View dendograms, heatmaps, and spatial cluster maps.</p>
+<ul>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li>Select a proximity method, clustering method, and desired number of clusters, then click <strong>Generate Plots</strong>.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>ClustGeo:</strong></p>
+<ul>
+<li><p>Select proximity method and number of clusters</p></li>
+<li><p>View Cluster Chloropeth Map and Choice Alpha Graph.</p>
+<ul>
+<li><p><strong>How to Use</strong>:</p>
+<ul>
+<li><p>Select a region, proximity method and number of clusters.</p></li>
+<li><p>Click on the “Run CLUSTGEO” button to generate the plots.</p></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ol></li>
 </ul>
 <hr>
 </section>

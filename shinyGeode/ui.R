@@ -1,5 +1,5 @@
 navbarPage(
-    "Don't do crime",
+    "GeoPEACE",
     id = 'navbarID',
     fluid = TRUE,
     theme = shinytheme('sandstone'),
@@ -374,8 +374,8 @@ navbarPage(
             sidebarLayout(
               sidebarPanel(
                 # Input: Select dataset
-                selectInput("clustGeo_dataset", "Choose Dataset:",
-                            choices = list("crime_merged_sf" = "crime_merged_sf")),
+                #selectInput("clustGeo_dataset", "Choose Dataset:",
+                            #choices = list("crime_merged_sf" = "crime_merged_sf")),
                 
                 selectInput(inputId = "clustGeo_region",
                             label = "Region",

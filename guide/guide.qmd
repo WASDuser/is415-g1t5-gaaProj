@@ -1,5 +1,5 @@
 ---
-title: "Project Guide[THIS IS A DRAFTTTTTTTTTTTT]"
+title: "Project User Guide"
 author: "Santhya, William, Marcus"
 code-link: true
 ---
@@ -18,9 +18,9 @@ The application is divided into several tabs:
 
 -   **EDA (Exploratory Data Analysis)**: Visualize and analyze relationships between variables.
 
--   **ESDA (Exploratory Spatial Data Analysis)**: Perform geospatial analyses and view choropleth maps.
+-   **ESDA (Exploratory Spatial Data Analysis)**: Perform geospatial analyses and plot choropleth maps that reflect the spatial relationships in the study area.
 
--   **Clustering**: Apply clustering techniques using **Hierarchical Cluster Analysis** (abbreviated to **`hclust`**), the R package [`ClustGeo`](https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html) and the **`SKATER`** method of [**`spdep`**](https://cran.r-project.org/web/packages/spdep/spdep.pdf) package
+    **Clustering**: Apply clustering techniques using **Hierarchical Cluster Analysis** (abbreviated to **`hclust`**), the R package [`ClustGeo`](https://cran.r-project.org/web/packages/ClustGeo/vignettes/intro_ClustGeo.html) and the **`SKATER`** method of [**`spdep`**](https://cran.r-project.org/web/packages/spdep/spdep.pdf) package.
 
 #### Working Dataset:
 
@@ -30,9 +30,9 @@ The application is divided into several tabs:
 
 # **Tabs and Functionalities**
 
-### **Data**
+### **1. Data**
 
--   **Purpose**: Understand the dataset structure and get an initial overview.
+-   **Purpose**: Understand the structure of the dataset and get an initial overview.
 
 -   **Features**:
 
@@ -62,7 +62,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-### **EDA Tab**
+### **2. EDA Tab**
 
 -   **Purpose**: Analyze and visualize categorical or continuous variables.
 
@@ -86,7 +86,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-### **ESDA Tab (-------------------- TBC--------------------- )**
+### **3. ESDA Tab (-------------------- TBC--------------------- )**
 
 -   **Purpose**: Conduct spatial analyses and visualize crime data geographically.
 
@@ -116,7 +116,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-#### **2.4 Clustering Tab  (-------------------- TBC--------------------- )**
+#### **2.4 Clustering Tab (-------------------- TBC--------------------- )**
 
 -   **Purpose**: Segment data spatially using clustering methods.
 
@@ -128,21 +128,31 @@ The application is divided into several tabs:
 
         -   Run SKATER and view clusters on a map.
 
-    2.  **Hierarchical Clustering (`hclust`)** (additional tab):
+            -   **How to Use**:
+
+                -   Choose the dataset, distance method, and the number of clusters. Click **Run SKATER** to visualize results.
+
+    2.  **Hierarchical Clustering (`hclust`)**:
 
         -   Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).
 
         -   View dendograms, heatmaps, and spatial cluster maps.
 
-    3.  **ClustGeo**
+            -   **How to Use**:
 
--   **How to Use**:
+                -   Select a proximity method, clustering method, and desired number of clusters, then click **Generate Plots**.
 
-    -   For **SKATER**: Choose the dataset, distance method, and the number of clusters. Click **Run SKATER** to visualize results.
+    3.  **ClustGeo:**
 
-    -   For **hclust**: Select a proximity method, clustering method, and desired number of clusters, then click **Generate Plots**.
+        -   Select proximity method and number of clusters
 
-    -   For **ClustGeo**:
+        -   View Cluster Chloropeth Map and Choice Alpha Graph.
+
+            -   **How to Use**:
+
+                -   Select a region, proximity method and number of clusters.
+
+                -   Click on the "Run CLUSTGEO" button to generate the plots.
 
 ------------------------------------------------------------------------
 
