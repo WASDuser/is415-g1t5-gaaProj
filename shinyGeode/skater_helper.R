@@ -58,7 +58,7 @@ run_skater <- function(data, meth, n_clusters){
 
     groups_mat <- as.matrix(clustN$groups)
     skater_cluster <- cbind(sf_cluster, as.factor(groups_mat)) %>%
-      rename(`CLUSTER` = `as.factor.groups_mat.`)
+      rename(`Skater_CLUSTER` = `as.factor.groups_mat.`)
     
     return(skater_cluster)
 }
