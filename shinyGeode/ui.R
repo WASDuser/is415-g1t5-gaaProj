@@ -370,7 +370,7 @@ navbarPage(
                           
                         )),
                
-        tabPanel('clustGEO'),
+        tabPanel('clustGEO',
             sidebarLayout(
               sidebarPanel(
                 # Input: Select dataset
@@ -407,7 +407,7 @@ navbarPage(
                             )
                 )
               )
-            ),
+            )),
         tabPanel('SKATER',
             sidebarLayout(
                 sidebarPanel(
