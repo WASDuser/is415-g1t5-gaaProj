@@ -86,17 +86,7 @@ Key details include:
 
 **Crime rate** $R_{i,t,c}$ for district $i$ year $t$, and crime type $c$ is then computed as the proportion of crimes of type $c$ in district $i$ relative to the total crimes in the same district and year, expressed as a percentage:
 
-$$
-\text{R}_{i,t,c} = \left( \frac{\text{crimes}_{i,t,c}}{\text{total_crimes_year}_{i,t}} \right) \times 100
-$$
-
-Where:
-
--   $R_{i,t,c}$ is the crime rate for district $i$, year $t$, and crime type $c$,
-
--   $\text{crimes}_{i,t,c}$ *is the number of crimes of type* $c$ *in district* $i$ *in year* $t$*,*
-
--   $\text{total_crimes_year}_{i,t}$ is the total number of crimes in district $i$ in year $t$, computed as the sum of all crimes across types for that district and year.
+![](images/clipboard-528946789.png)
 
 Thus, each crime rate figure corresponds to the proportion of a specific crime type relative to the total crimes reported in that district for the given year.
 
@@ -154,6 +144,8 @@ crime_merged <- crime_merged %>%
 -   **spdep**: For spatial dependence analysis and creating neighbors lists.
 
 -   **skater-helper**: A custom helper script for running spatial clustering with SKATER.
+
+-   **heatmaply**: A package that helps to plot heatmaps.
 
 ------------------------------------------------------------------------
 

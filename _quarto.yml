@@ -6,16 +6,14 @@ website:
   navbar:
     left:
       - href: 'proposal/proposal.qmd'
-        text: Proposal
+        text: Project Overview
       - href: 'poster/poster.qmd'
         text: Poster
       - href: 'guide/guide.qmd'
         text: User Guide
       - href: 'https://williamtjw.shinyapps.io/shinyGeode/'
         text: Shiny App
-    right: 
-      - about.qmd
-
+   
 format:
   html:
     theme: cosmo

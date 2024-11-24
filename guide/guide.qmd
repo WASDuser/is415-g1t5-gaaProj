@@ -86,7 +86,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-### **3. ESDA Tab (-------------------- TBC--------------------- )**
+### **3. ESDA Tab** 
 
 -   **Purpose**: Conduct spatial analyses and visualize crime data geographically.
 
@@ -116,7 +116,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-#### **2.4 Clustering Tab (-------------------- TBC--------------------- )**
+### **4. Clustering Tab** 
 
 -   **Purpose**: Segment data spatially using clustering methods.
 
@@ -124,41 +124,31 @@ The application is divided into several tabs:
 
     1.  **SKATER**: Spatial clustering based on graph theory.
 
-        -   Configure the number of clusters (`k`).
+        -   **How to Use**:
 
-        -   Run SKATER and view clusters on a map.
-
-            -   **How to Use**:
-
-                -   Choose the dataset, distance method, and the number of clusters. Click **Run SKATER** to visualize results.
+            -   Choose the dataset, distance method, and the number of clusters. Click **Run SKATER** to view clusters on a map.
 
     2.  **Hierarchical Clustering (`hclust`)**:
 
-        -   Select proximity and clustering methods (e.g., Euclidean distance, Ward’s method).
+        -   **How to Use**:
 
-        -   View dendograms, heatmaps, and spatial cluster maps.
+            -   Select a proximity method, clustering method, and desired number of clusters, then click **Generate Plots**.
 
-            -   **How to Use**:
-
-                -   Select a proximity method, clustering method, and desired number of clusters, then click **Generate Plots**.
+            -   View dendograms, heatmaps, and spatial cluster maps.
 
     3.  **ClustGeo:**
 
-        -   Select proximity method and number of clusters
+        -   **How to Use**:
 
-        -   View Cluster Chloropeth Map and Choice Alpha Graph.
+            -   Select a region, proximity method and number of clusters.
 
-            -   **How to Use**:
-
-                -   Select a region, proximity method and number of clusters.
-
-                -   Click on the "Run CLUSTGEO" button to generate the plots.
+            -   Click on the "Run CLUSTGEO" button to view Cluster Chloropeth Map and Choice Alpha Graph.
 
 ------------------------------------------------------------------------
 
-### **3. Jargon and Interpretations**
+### **5. Jargon and Interpretations**
 
-#### **Crime Data Terms**
+#### **5.1 Crime Data Terms**
 
 -   **Crime Rate**: The number of crimes per population unit, used to standardize comparisons.
 
@@ -166,7 +156,7 @@ The application is divided into several tabs:
 
 -   **Crime Type**: Categories of crime, such as theft, assault, etc.
 
-#### **Spatial Analysis Terms**
+#### **5.2 Spatial Analysis Terms**
 
 -   **Choropleth Map**: A thematic map where areas are shaded based on a variable's value (e.g., crime rate).
 
@@ -176,7 +166,7 @@ The application is divided into several tabs:
 
 -   **LISA**: Identifies local clusters and spatial outliers.
 
-#### **Clustering Terms**
+#### **5.3 Clustering Terms**
 
 -   **SKATER**: Groups regions based on both spatial proximity and similarity in attributes.
 
@@ -186,7 +176,7 @@ The application is divided into several tabs:
 
 ------------------------------------------------------------------------
 
-### **4. Tips and Best Practices**
+### **6. Tips and Best Practices**
 
 1.  **Data Exploration**: Start with the **Data Tab** to familiarize yourself with the dataset.
 
