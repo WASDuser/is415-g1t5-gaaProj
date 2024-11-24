@@ -157,6 +157,16 @@ function(input, output, session) {
     
     # ------------------------------ END OF EDA ------------------------------
     
+    # Dyanmic time period options - choro
+    observe({
+      data <- crime_merged_sf
+      years <- unique(year(data$date.y))
+      
+      updateSelectInput(session, 'time_period',
+        choices = years,
+        selected = years[1])
+    })
+    
     # Choloropleth output
     choropleth_map <- eventReactive(input$submit_esda,{
       req(input$esda_variable)
@@ -168,6 +178,7 @@ function(input, output, session) {
       
       chosen_data <- crime_merged_sf
       chosen_var <- input$esda_variable
+      chosen_year <- input$time_period
       chosen_crime <- input$crime_type
       chosen_region <- input$region
       chosen_class <- input$classification
@@ -176,6 +187,7 @@ function(input, output, session) {
       
       data <- crime_merged_sf %>% ungroup() %>% st_as_sf() %>%
         filter(region == chosen_region) %>% 
+        filter(year == chosen_year) %>% 
         filter(type == chosen_crime)
       
       # for debugging ---------------------------------------------------

@@ -88,13 +88,15 @@ navbarPage(
                     #     choices = list(
                     #         "crime_merged_sf" = "crime_merged_sf"
                     #     )),
+                    selectInput("time_period", "Select Year:",
+                        choices = NULL,
+                        selected = NULL),
                     
                     selectInput("esda_variable", "Select Variable for Choropleth:",
                         choices = list(
                             "crimes"="crimes",
                             "crime_rate"="crime_rate"
-                        ),
-                        selected = "crimes"),
+                        )),
                     
                     selectInput("crime_type", "Select Crime Type:",
                         choices = NULL,
